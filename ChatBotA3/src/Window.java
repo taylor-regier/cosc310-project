@@ -3,11 +3,16 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -15,6 +20,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import edu.stanford.nlp.pipeline.CoreEntityMention;
+import edu.stanford.nlp.pipeline.CoreSentence;
+import edu.stanford.nlp.coref.data.CorefChain;
+import edu.stanford.nlp.ling.*;
+import edu.stanford.nlp.ie.util.*;
+import edu.stanford.nlp.pipeline.*;
+import edu.stanford.nlp.semgraph.*;
+import edu.stanford.nlp.trees.*;
+
+
+
+
+
 
 public class Window extends JFrame implements KeyListener{
 	//Here we make a window that will contain our text area box and the input box at the bottom as well as a scroll bar the shows up when needed
@@ -24,6 +43,7 @@ public class Window extends JFrame implements KeyListener{
 	JScrollPane sideBar= new JScrollPane(talkArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	//This is to load the image of the bot into an icon form
 	ImageIcon icon = new ImageIcon("img/bot.png");
+	StanfordCoreNLP pipeline;
 
 
 	
@@ -34,42 +54,44 @@ public class Window extends JFrame implements KeyListener{
 			//Thank you
 			{"You're welcome"},
 			//Default
-			{"Sorry I did not understand that. I may not have enough updates to understand what you were asking"},
+			{"Sorry I did not understand that. I may not have enough updates to understand what you \n\twere asking"},
 			//Goodbye
 			{"It was a pleasure to talk to you","Have a great day","See you later","Goodbye", "We must colonize Mars!"},
 			//Career Facts
 			{"My first company was Zip2,which eventually sold to Compaq for $307 million.",
 				"I am the founder of Space Exploration technologies, better known as SpaceX",
 				"In 2008 I took over as CEO of Tesla.",
-				"I was the cofounder of X.com, which later merged with confinity to form paypal and was then sold to ebay for $1.5 Billion!",
+				"I was the cofounder of X.com, which later merged with confinity to form paypal and was then \n\tsold to ebay for $1.5 Billion!",
 				"In 2015 I co-founded OpenAI, a non profit reasearch company.",
-				"In 2016 I founded Nueralink, a company that focuses on bran-computer interactions.",
+				"In 2016 I founded Neuralink, a company that focuses on bran-computer interactions.",
 				"In 2006 I helped create SolarCity.",
-				"The main companies I have been involved in are: Zip2,SpaceX,Tesla,OpenAI,Nueralink and SolarCity"},
+				"The main companies I have been involved in are: Zip2,SpaceX,Tesla,OpenAI,Neuralink and SolarCity"},
 			//general random interests
 			{ "I'm a big fan of dogecoin, and all forms of cryptocurrency!", "Spaceships are cool I guess.",
 					"I love cars! I remember when I bought my first McLaren F1.", "I love anime!" },
 			// Interests facts
 			{ "Probably Parasite, it was definitely the best movie of 2019.",
 					"Black Mirror, I really like the concepts it explores.",
-					"I really enjoyed Your Name, but i'm also a fan of Studio Ghibli. Princess Mononoke is one of my favourite\n\tfilms by them.",
-					"My favourite airplane is the SR-71 Blackbird. The A-XII in X AE A-XII is the predecessor to this plane." },
+					"I really enjoyed Your Name, but I'm also a fan of Studio Ghibli. Princess Mononoke is one of my\n\tfavourite films by them.",
+					"My favourite airplane is the SR-71 Blackbird. The A-XII in X AE A-XII is the predecessor to\n\tthis plane." },
 			//Life Facts
 			{"I was born in Pretoria, South Africa.", "June 28 1971.","Thank you for asking. I'm 49 now and will be 50 this year.", 
-				"My parents were Maye who was my mother and Errol who was my father. I am not very fond of my father."," I have two siblings. Tosca who is my sister and Kimbal who is my brother",
+				"My parents were Maye who was my mother and Errol who was my father. I am not very fond\n\tof my father."," I have two siblings. Tosca who is my sister and Kimbal who is my brother",
 				"I started university in Pretoria, which I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
-				"I have had two wives but those ended in divorce. I am currently am dating the musician grimes",
-				"My first wife's name was Justine Wilson and we were married from 2000-2008. We had 5 children. \n\tOne of our kids Nevada unfortunately passed away due to sudden infant death syndrome",
-				"My second wife's name was Talula Riley and we were married from 2010-2016",
+				"I have had two wives but those ended in divorce. I am currently am dating the musician Grimes",
+				"My first wife's name was Justine Wilson and we were married from 2000-2008. We had 5 \n\tchildren. One of our kids Nevada unfortunately passed away due to sudden infant death syndrome.",
+				"My second wife's name was Talula Riley and we were married from 2010-2016.",
 				"I am currently dating the musician Grimes. We have one child together named X AE A-XII.\n\tWe had a fun time naming this one.",
 				"When I was 12 I sold my first game Blastar for $500.",
 				"I taught myself to code when I was around 10 years old.",
-				"I mainly spend my time between SpaceX and Tesla, and i'm heavily involved with the engineering decisions\n\tat those companies. Though I also spend a lot of my time at OpenAI too.",
-				"I own a lot of cars, but mainly drive my Model S. Though I only drive Teslas now, i've owned a \n\t1978 BMW 320i and a 1967 Jaguar (E-type)."
+				"I mainly spend my time between SpaceX and Tesla, and I'm heavily involved with the engineering decisions\n\tat those companies. I also spend a lot of my time at OpenAI too.",
+				"I own a lot of cars, but mainly drive my Model S. Though I only drive Teslas now, I've owned a \n\t1978 BMW 320i and a 1967 Jaguar (E-type)."
 				},
 			//Appearances/Interviews
-			{ "I had a cameo in The Simpsons, The Big Bang theory, South Park, and Rick and Morty. Maybe you've seen\n\tone of my episodes?",
-			  "Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..." }
+			{ "I had a cameo in The Simpsons, The Big Bang theory, South Park, and Rick and Morty. Maybe\n\tyou've seen one of my episodes?",
+			  "Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..." },
+			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man.", "War... war never changes but men do, through the places they've been"}
+				
 
 	};
 	
@@ -88,6 +110,19 @@ public class Window extends JFrame implements KeyListener{
 		pane.add(sideBar);
 		pane.add(input);
 		
+		
+		
+	    //Core NLP stuff taken directly from their website.
+		
+	    // set up pipeline properties 
+		    Properties props = new Properties();
+		    // set the list of annotators to run
+		    props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote");
+		    // set a property for an annotator, in this case the coref annotator is being set to use the neural algorithm
+		    props.setProperty("coref.algorithm", "neural");
+		    // build pipeline
+		    pipeline = new StanfordCoreNLP(props);
+	
 		//Add a GIF as a jLabel based on URL.
 		try {
 		//GIF: Harrington, D. (2020). Pixel-Robot[GIF]. Retrieved from https://opengameart.org/content/pixel-robot.
@@ -114,6 +149,10 @@ public class Window extends JFrame implements KeyListener{
 		setVisible(true);
 		//Calling the addText method to add text to the text ares
 		addText("\t\t\tPlease type Q to end the conversation\n" );
+		
+		
+   
+	    
 		
 		
 
@@ -148,18 +187,7 @@ public class Window extends JFrame implements KeyListener{
 				question = true;
 			else
 				question = false;
-			
-			// Replace all punctuation so it doesn't interfere with responses
-			msg = msg.replace('?', (char)32);
-			msg = msg.replace('.', (char)32);
-			msg = msg.replace(',', (char)32);
-			
-			//trim the end of whitespaces
-			msg=msg.trim();
-			//convert the msg to lower case so case doesn't matter
-			msg=msg.toLowerCase();
-			
-			//call the response method sending the msg String 
+			//call the response method sending the msg String and boolean question which is true if a question was asked
 			response(msg, question);
 			
 			
@@ -192,14 +220,34 @@ public class Window extends JFrame implements KeyListener{
 	//The method that will get the bots response
 	public void response(String s, Boolean question) {
 		int r,c;
-		//make a list of every work in the message
-		List<String> sent= Arrays.asList(s.split(" "));
+		//Make msg lower case so that s is intact and case doesn't matter for sent
+		String msg = s.toLowerCase();
+		// Replace all punctuation so it doesn't interfere with responses
+		msg = msg.replace('?', (char)32);
+		msg = msg.replace(',', (char)32);
+		msg = msg.replace('.', (char)32);
+		//trim the end of whitespaces
+		msg=msg.trim();
+		//make a list of every word in the message
+		List<String> sent = Arrays.asList(msg.split(" "));
+		//A string list of all the named entities detected by corenlp
+		List<String> namedEntities = getNameEntityList(s);
 		addText("\n-->Elon:\t");
 		//if it is hello print a greeting
 		if(sent.contains("hello")||sent.contains("hi")||sent.contains("hey")) {
 			r=0;
 			c=0;
 			
+			//Saying Hi i'm [name], gives this response. Likely the name is the first entity in the sentence if done correctly, so elon will repeat your name back.
+			if(sent.contains("im")||sent.contains("i'm")||(sent.contains("i")&&sent.contains("am"))||(sent.contains("my")&&sent.contains("name"))&&!namedEntities.isEmpty()){
+				String name = namedEntities.get(0);
+				//makes the first letter capital
+				name = name.substring(0,1).toUpperCase() + name.substring(1);
+				//response
+				addText("Nice to meet you " + name + ". You have a nice name.\n");
+				addText("\n-->Elon:\t");
+			}
+
 		}
 		//response to how are you?
 		// #2 response bug one -> added sent.contains !old so how old are you does not trigger. 
@@ -234,15 +282,15 @@ public class Window extends JFrame implements KeyListener{
 			r = 7;
 			c = 4;
 		}
-		else if(sent.contains("education")) {
+		else if(sent.contains("education")||sent.contains("school")) {
 			r = 7;
 			c = 5;
 		}
-		else if(sent.contains("first")&&sent.contains("wife")) {
+		else if((sent.contains("first")||sent.contains("1st"))&&sent.contains("wife")) {
 			r = 7;
 			c = 7;
 		}
-		else if(sent.contains("second")&&sent.contains("wife")) {
+		else if((sent.contains("second")||sent.contains("2nd"))&&sent.contains("wife")) {
 			r = 7;
 			c = 8;
 		}
@@ -250,7 +298,7 @@ public class Window extends JFrame implements KeyListener{
 			r = 7;
 			c = 6;
 		}
-		else if(sent.contains("currently")||sent.contains("dating")||sent.contains("grimes")) {
+		else if(sent.contains("currently")||sent.contains("dating")||namedEntities.contains("grimes")) {
 			r = 7;
 			c = 9;
 		}
@@ -281,7 +329,7 @@ public class Window extends JFrame implements KeyListener{
 			c = 0;
 		}
 		//Joe rogan podcast
-		else if(sent.contains("joe")&&sent.contains("rogan")) {
+		else if(namedEntities.contains("joe rogan")) {
 		   r= 8;
 		   c= 1;
 		   
@@ -313,7 +361,7 @@ public class Window extends JFrame implements KeyListener{
 		
 //----------------------------------------------------Career----------------------------------------------------------//
 		
-		else if((sent.contains("zip2")||sent.contains("first"))&&(sent.contains("company")||sent.contains("business"))) {
+		else if(sent.contains("zip2")||(sent.contains("first")&&(sent.contains("company")||sent.contains("business")))) {
 			r = 4;
 			c = 0;
 		}
@@ -323,12 +371,12 @@ public class Window extends JFrame implements KeyListener{
 			c = 1;
 		}
 		//tesla
-		else if(sent.contains("tesla")) {
+		else if(namedEntities.contains("tesla")) {
 			r = 4;
 			c = 2;
 		}
 		//paypal
-		else if(sent.contains("x.com")||sent.contains("confinity")||sent.contains("ebay")||sent.contains("paypal")) {
+		else if(namedEntities.contains("x.com")||sent.contains("confinity")||namedEntities.contains("ebay")||namedEntities.contains("paypal")) {
 			r = 4;
 			c = 3;
 		}
@@ -337,8 +385,8 @@ public class Window extends JFrame implements KeyListener{
 			r = 4;
 			c = 4;
 		}
-		//Nueralink
-		else if(sent.contains("nueralink")) {
+		//Neuralink
+		else if(namedEntities.contains("neuralink")) {
 			r = 4;
 			c = 5;
 		}
@@ -347,12 +395,39 @@ public class Window extends JFrame implements KeyListener{
 			r = 4;
 			c = 6;
 		}
-		//if its q end the chat and disable the input field
-
 		// list of all major companies
 		else if((sent.contains("companies")||sent.contains("businesses"))&&sent.contains("what")) {
 			r = 4;
 			c = 7;
+		}//Ask Elon about places he has been
+		else if(sent.contains("have")&&sent.contains("you")&&sent.contains("been")&&sent.contains("to")) {
+			// namedEntities will be empty if an recognized location is entered by corenlp
+			if(!namedEntities.isEmpty()) {
+				int rnd = (int)Math.round(Math.random()*(namedEntities.size()-1));
+				//If multiple places are entered elon will randomnly pick one
+				String place = namedEntities.get(rnd);
+				
+				place = place.substring(0,1).toUpperCase() + place.substring(1);
+				addText("I can't remember if i've been to " + place + " ,but " + place + " sure seems like a lovely place.\n");
+				addText("\n-->Elon:\t");
+			}
+			else {
+				addText("Been to where?\n");
+				addText("\n-->Elon:\t");
+			}
+			
+		    r = 9;
+		    c=(int)Math.round(Math.random()*3);
+			
+			
+		}
+//----------------------------------------Easter Egg--------------------------------------------------------//
+		else if(s.equals("the earth king has invited you to lake laogai")) {
+			addText("I am honored to accept his invitation.\n");
+			addText("\n-->Elon:\t");
+			r = 2;
+			c=  0;
+			
 		}
 		
 //------------------------------------------------------Random-----------------------------------------------//
@@ -389,6 +464,43 @@ public class Window extends JFrame implements KeyListener{
 		//Changed length from the og below. Fixed bug where the window moves out of frame on the x axis when q is pressed. 
 		//addText("-------------------------------------------------------------------------------------Chat Has Ended------------------------------------------------------------------------------------");
 	}	 
+
+	   
+	
+	//Get a list of namedEntitys in the strings and then convert those named entities to strings in a new list
+	    public List<String> getNameEntityList(String s){
+	    	
+	    	List<String> list = new ArrayList();
+            //document for corenlp
+		    CoreDocument document = new CoreDocument(s);
+		    // annnotate the document
+		    pipeline.annotate(document);
+		    // get entities from the document
+			List<CoreEntityMention> entityMentions = document.entityMentions();
+			//print entities
+			System.out.println(entityMentions.toString());
+			//Convert entities to their string representations and add to the list
+			for(int i = 0; i<entityMentions.size();i++) {
+				list.add(entityMentions.get(i).toString().toLowerCase());
+				
+			}
+	
+	    	
+	    	return list;
+	    	
+	    }
+	    
+	   
+		
+
+
+
+		
+	
+	
+
+	
+	
 	
 
 	
