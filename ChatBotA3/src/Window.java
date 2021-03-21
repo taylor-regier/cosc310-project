@@ -115,7 +115,7 @@ public class Window extends JFrame implements KeyListener{
 	    //Core NLP stuff taken directly from their website.
 		
 	    // set up pipeline properties
-		pipeline = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote", "coref.algorithm", "neural");
+		pipeline = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote, sentiment", "coref.algorithm", "neural");
 	
 		//Add a GIF as a jLabel based on URL.
 		try {
