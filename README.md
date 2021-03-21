@@ -85,7 +85,7 @@ The main purpose of this method is to split the message string into an array of 
 ![namedEntities](https://user-images.githubusercontent.com/75397522/111888896-03694200-899e-11eb-9e77-4725305d9f89.PNG)
 
 
-***Figure 9: Named Entities Example:
+***Figure 9:*** Named Entities Example:
 
 If you introduce yourself with your name and your name is a recognized entity. Elon will say you have a nice name. Grimes response is now triggered if the entity grimes is detected along with others ie Tesla. On the right recognized entities are listed
 
