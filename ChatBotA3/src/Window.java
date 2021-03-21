@@ -21,8 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import edu.stanford.nlp.pipeline.CoreEntityMention;
-import edu.stanford.nlp.pipeline.CoreSentence;
+import edu.stanford.nlp.coref.CorefCoreAnnotations;
 import edu.stanford.nlp.coref.data.CorefChain;
 import edu.stanford.nlp.ling.*;
 import edu.stanford.nlp.ie.util.*;
@@ -477,18 +476,31 @@ public class Window extends JFrame implements KeyListener{
 	    	
 	    }
 	    
-	   
-		
+	    //coreference resolution
+	    /*********************
+	     * Determins the coreferences for the sentence, then puts them into an array with
+	     * equvalent words, all equivalent words are in the same array. If multiple 
+	     * equivalences exist will return a list of arrays
+	     * @param sentence that will be solved
+	     * @return list of equivalant words
+	     */
+		public static List<Object> CoRef(String s) {
+				List<Object> list = new ArrayList<Object>();
+			    Annotation document = new Annotation(s);
+			    Properties props = new Properties();
+			    props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,coref");
+			    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+			    pipeline.annotate(document);
+			    for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
+			      list.add(extract(cc.getMentionMap().values().toArray()));		   
+			    }
+				return list;
+		}
 
-
-
-		
-	
-	
-
-	
-	
-	
-
-	
+		public static Object[] extract(Object[] A) {
+			for (int i = 0;i < A.length;i++)
+				A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
+			return A;
+		}
+	 
 }
