@@ -12,8 +12,8 @@ import edu.stanford.nlp.util.CoreMap;
 public class main {
 
 	public static void main(String[] args) {
-		//new Window();
-		test("abcd");
+		new Window();
+		//test("abcd");
 	}
 
 	public static void test(String s) {
