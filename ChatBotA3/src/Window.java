@@ -117,7 +117,7 @@ public class Window extends JFrame implements KeyListener{
 	    // set up pipeline properties 
 		    Properties props = new Properties();
 		    // set the list of annotators to run
-		    props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote");
+		    props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote,sentiment");
 		    // set a property for an annotator, in this case the coref annotator is being set to use the neural algorithm
 		    props.setProperty("coref.algorithm", "neural");
 		    // build pipeline
@@ -176,6 +176,7 @@ public class Window extends JFrame implements KeyListener{
 			input.setEditable(false);
 			//put the the sentence in the input text field into a String
 			String msg=input.getText();
+			analyse(msg);
 			//set the input field to empty
 			input.setText("");
 			//Call the method that adds the text to the text are
@@ -490,6 +491,29 @@ public class Window extends JFrame implements KeyListener{
 	    	
 	    }
 	    
+	    public int analyse(String txt) {
+	    	//document for corenlp
+	    	CoreDocument core= new CoreDocument(txt);
+	    	//annotate the document
+	    	pipeline.annotate(core);
+	    	//Make a variable which will store the sentiment value
+	    	int temp=0;
+	    	//get the sentences from the input msg
+	    	List<CoreSentence> sentences= core.sentences();
+	    	//go through each sentence and get the sentiment
+	    	for(CoreSentence sentence: sentences) {
+	    		String sentiment = sentence.sentiment();
+	    		if(sentiment.equalsIgnoreCase("Positive"))
+	    			temp=1;
+	    		else if(sentiment.equalsIgnoreCase("Negative"))
+	    			temp=-1;
+	    		else
+	    			temp=0;
+	    		System.out.println(sentiment+","+temp+ "\t"+ txt);
+	    	}
+	    	
+	    	return temp;
+	    }
 	   
 		
 
