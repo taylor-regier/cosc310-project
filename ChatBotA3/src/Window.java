@@ -43,7 +43,7 @@ public class Window extends JFrame implements KeyListener{
 	JScrollPane sideBar= new JScrollPane(talkArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	//This is to load the image of the bot into an icon form
 	ImageIcon icon = new ImageIcon("img/bot.png");
-	StanfordCoreNLP pipeline;
+	Pipeline pipeline;
 
 
 	
@@ -90,7 +90,7 @@ public class Window extends JFrame implements KeyListener{
 			//Appearances/Interviews
 			{ "I had a cameo in The Simpsons, The Big Bang theory, South Park, and Rick and Morty. Maybe\n\tyou've seen one of my episodes?",
 			  "Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..." },
-			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man.", "War... war never changes but men do, through the places they've been"}
+			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man doesn't?", "Maybe"}
 				
 
 	};
@@ -114,14 +114,8 @@ public class Window extends JFrame implements KeyListener{
 		
 	    //Core NLP stuff taken directly from their website.
 		
-	    // set up pipeline properties 
-		    Properties props = new Properties();
-		    // set the list of annotators to run
-		    props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote");
-		    // set a property for an annotator, in this case the coref annotator is being set to use the neural algorithm
-		    props.setProperty("coref.algorithm", "neural");
-		    // build pipeline
-		    pipeline = new StanfordCoreNLP(props);
+	    // set up pipeline properties
+		pipeline = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote", "coref.algorithm", "neural");
 	
 		//Add a GIF as a jLabel based on URL.
 		try {
@@ -151,13 +145,6 @@ public class Window extends JFrame implements KeyListener{
 		addText("\t\t\tPlease type Q to end the conversation\n" );
 		
 		
-   
-	    
-		
-		
-
-		
-	
 		
 	}
 
@@ -399,6 +386,7 @@ public class Window extends JFrame implements KeyListener{
 		else if((sent.contains("companies")||sent.contains("businesses"))&&sent.contains("what")) {
 			r = 4;
 			c = 7;
+			
 		}//Ask Elon about places he has been
 		else if(sent.contains("have")&&sent.contains("you")&&sent.contains("been")&&sent.contains("to")) {
 			// namedEntities will be empty if an recognized location is entered by corenlp
@@ -408,7 +396,7 @@ public class Window extends JFrame implements KeyListener{
 				String place = namedEntities.get(rnd);
 				
 				place = place.substring(0,1).toUpperCase() + place.substring(1);
-				addText("I can't remember if i've been to " + place + " ,but " + place + " sure seems like a lovely place.\n");
+				addText("I can't remember if i've been to " + place + ", but " + place + " sure seems like it's lovely!\n");
 				addText("\n-->Elon:\t");
 			}
 			else {
@@ -417,12 +405,12 @@ public class Window extends JFrame implements KeyListener{
 			}
 			
 		    r = 9;
-		    c=(int)Math.round(Math.random()*3);
+		    c=(int)Math.round(Math.random()*2);
 			
 			
 		}
 //----------------------------------------Easter Egg--------------------------------------------------------//
-		else if(s.equals("the earth king has invited you to lake laogai")) {
+		else if(s.toLowerCase().equals("the earth king has invited you to lake laogai.")) {
 			addText("I am honored to accept his invitation.\n");
 			addText("\n-->Elon:\t");
 			r = 2;
@@ -467,14 +455,14 @@ public class Window extends JFrame implements KeyListener{
 
 	   
 	
-	//Get a list of namedEntitys in the strings and then convert those named entities to strings in a new list
+	//Get a list of namedEntitys from the string and then convert those named entities to strings in a new list
 	    public List<String> getNameEntityList(String s){
 	    	
 	    	List<String> list = new ArrayList();
             //document for corenlp
 		    CoreDocument document = new CoreDocument(s);
 		    // annnotate the document
-		    pipeline.annotate(document);
+		    pipeline.getPipe().annotate(document);
 		    // get entities from the document
 			List<CoreEntityMention> entityMentions = document.entityMentions();
 			//print entities
@@ -482,7 +470,6 @@ public class Window extends JFrame implements KeyListener{
 			//Convert entities to their string representations and add to the list
 			for(int i = 0; i<entityMentions.size();i++) {
 				list.add(entityMentions.get(i).toString().toLowerCase());
-				
 			}
 	
 	    	
