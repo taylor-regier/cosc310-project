@@ -75,6 +75,7 @@ The purpose of this method is to take a string and add it to the main conversati
 
 The main purpose of this method is to split the message string into an array of its individual words. It will then check the words contained in this array to grab the correct bot response from the response 2d array shown above. Then we check if the question boolean value was true and we generate a random number to check if it equals a specified number and if both cases are true our bot will tell the user that their question was a good question. If the user sent ‘q’ we sent a message saying that the chat has ended.
 
+---------------------------------------
 # Implementations
 ---------------------------------------
 
@@ -93,3 +94,14 @@ If you introduce yourself with your name and your name is a recognized entity. E
 ***Figure 10:*** Places Visited Example:
 
 You can ask elon where he has been, listing places. Elon will randomly select a recognized entity and then give a general response about it.
+
+---------------------------------------
+
+## Phrasel (*Stanford toolkit*)
+---------------------------------------
+
+
+---------------------------------------
+
+## Sentiment analysis tools (*Stanford toolkit*)
+---------------------------------------
