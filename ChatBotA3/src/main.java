@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import edu.stanford.nlp.coref.CorefCoreAnnotations;
 import java.util.Properties;
 
@@ -10,15 +9,13 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
 
-=======
->>>>>>> 7eafe0cc30ca93035bedaa543cd189494b1e2044
 public class main {
 
 	public static void main(String[] args) {
 		//new Window();
 		test("abcd");
 	}
-<<<<<<< HEAD
+
 	public static void test(String s) {
 
 		    Annotation document = new Annotation("Barack Obama was born in Hawaii.  He is the president. Obama was elected in 2008.");
@@ -38,9 +35,7 @@ public class main {
 		        System.out.println("\t" + m);
 		       }
 		    }
-		  }
-
+		  
 	}
-=======
 }
->>>>>>> 7eafe0cc30ca93035bedaa543cd189494b1e2044
+
