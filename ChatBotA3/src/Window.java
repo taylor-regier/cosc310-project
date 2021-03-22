@@ -476,7 +476,8 @@ public class Window extends JFrame implements KeyListener{
 	    	
 	    }
 	    
-	    //coreference resolution
+	    
+		 //coreference resolution
 	    /*********************
 	     * Determins the coreferences for the sentence, then puts them into an array with
 	     * equvalent words, all equivalent words are in the same array. If multiple 
@@ -484,12 +485,12 @@ public class Window extends JFrame implements KeyListener{
 	     * @param sentence that will be solved
 	     * @return list of equivalant words
 	     */
-		public static List<Object> CoRef(String s) {
-				List<Object> list = new ArrayList<Object>();
+		public static List<Object[]> CoRef(String s) {
+				List<Object[]> list = new ArrayList<Object[]>();
 			    Annotation document = new Annotation(s);
-			    Properties props = new Properties();
-			    props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,coref");
-			    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+			    Properties properties = new Properties();
+			    properties.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,coref");
+			    StanfordCoreNLP pipeline = new StanfordCoreNLP(properties);
 			    pipeline.annotate(document);
 			    for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
 			      list.add(extract(cc.getMentionMap().values().toArray()));		   
@@ -501,6 +502,26 @@ public class Window extends JFrame implements KeyListener{
 			for (int i = 0;i < A.length;i++)
 				A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
 			return A;
+		}
+		
+		
+		/****************
+		 * Takes in A string s then takes the first item in equivalence list, then replaces all appearances of the 
+		 * following strings in the list, with the first item in the list. 
+		 * NOTE: MUST CAST
+		 * OBJECT[] WHEN CALLING METHOD.
+		 * @param Sentence that is to be updated
+		 * @param Equivalence matrix, that determines what is to be replaced, and by what
+		 * @return The updated sentence.
+		 */
+		public static String replace(String s,Object[] replace) {
+			String result = "";
+			String replacer = replace[0].toString();//value that is going to replace next
+			for(int i = 1; i < replace.length;i++) {
+				if(s.contains(replace[i].toString()))
+					s=s.replace(replace[i].toString(), replacer);
+			}
+			return result;
 		}
 	 
 }
