@@ -3,10 +3,14 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -110,11 +114,7 @@ public class Window extends JFrame implements KeyListener{
 		pane.add(sideBar);
 		pane.add(input);
 		
-		
-		
-	    //Core NLP stuff taken directly from their website.
-		
-	    // set up pipeline properties
+	    // set up pipeline properties and instantiate pipeline object
 		pipeline = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote, sentiment", "coref.algorithm", "neural");
 	
 		//Add a GIF as a jLabel based on URL.
@@ -156,7 +156,6 @@ public class Window extends JFrame implements KeyListener{
 
 	//a method that is called when button is pressed
 	public void keyPressed(KeyEvent e) {
-		
 		//if the key pressed is enter
 		if(e.getKeyCode()==KeyEvent.VK_ENTER) {
 			//set the input field so it is not editable
@@ -174,8 +173,15 @@ public class Window extends JFrame implements KeyListener{
 				question = true;
 			else
 				question = false;
-			//call the response method sending the msg String and boolean question which is true if a question was asked
-			response(msg, question);
+			
+			if(msg.equals("SocketSTUFF")) {
+			this.dispose();
+			doSocketStuff(55690);
+			}
+			else {
+				//call the response method sending the msg String and boolean question which is true if a question was asked
+				response(msg, question);
+			}
 			
 			
 		}
@@ -205,7 +211,7 @@ public class Window extends JFrame implements KeyListener{
 	}
 	
 	//The method that will get the bots response
-	public void response(String s, Boolean question) {
+	public String response(String s, Boolean question) {
 		int r,c;
 		//Make msg lower case so that s is intact and case doesn't matter for sent
 		String msg = s.toLowerCase();
@@ -441,13 +447,15 @@ public class Window extends JFrame implements KeyListener{
 			addText("\n-->Elon:\t");
 		}
 		
+		String response = Responses[r][c]+"\n";
 		//add the response to the text Area
-		addText(Responses[r][c]+"\n");	
+		addText(response);	
 		
 		//again checking if it was q and making a visible message saying the chat has ended across window
 		if(sent.contains("q"))
 			addText("--------------------------------------------Chat Has Ended--------------------------------------------");
 		
+		return response;
 		
 		//Changed length from the og below. Fixed bug where the window moves out of frame on the x axis when q is pressed. 
 		//addText("-------------------------------------------------------------------------------------Chat Has Ended------------------------------------------------------------------------------------");
@@ -475,6 +483,31 @@ public class Window extends JFrame implements KeyListener{
 	    	
 	    	return list;
 	    	
+	    }
+	    
+	    public void doSocketStuff(int port) {
+	    	try 
+	    	(ServerSocket serversocket = new ServerSocket(port);
+	    	Socket sock = serversocket.accept();//establishes connection 
+	    	DataInputStream dis = new DataInputStream(sock.getInputStream()); 
+	    	DataOutputStream dos = new DataOutputStream(sock.getOutputStream()))
+	    	{
+	    	String inmsg = "";
+	    	String outmsg = "";
+			while(inmsg!="bye") {
+		    inmsg = (String)dis.readUTF();  
+			outmsg = response(inmsg, inmsg.indexOf('?') != -1);
+			System.out.println(inmsg);
+			System.out.println(outmsg);
+			dos.writeUTF(outmsg);
+			}
+			
+	    	}
+	    	catch(Exception e) {
+	    		
+	    	}
+	    
+			
 	    }
 	    
 	   
