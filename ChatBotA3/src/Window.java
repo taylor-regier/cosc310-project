@@ -202,21 +202,21 @@ public class Window extends JFrame implements KeyListener{
 			Thread.currentThread().interrupt();
 		}
 	}
+	
 
 	//The method that will get the bots response
 	public void response(String s, Boolean question) {
 		int r,c;
-
-		String initMsg = s;
+		String initMsg = assist(s);
 		initMsg = initMsg.replace('.', (char)62);
 		initMsg = initMsg.replace('?', (char)62);
 
 		List<String> sentences = Arrays.asList(initMsg.split(">"));
-
+		
+		
 		for (int i=0; i < sentences.size(); i++) {
-
 			//Make msg lower case so that s is intact and case doesn't matter for sent
-			String msg = sentences.get(i).toLowerCase();
+			 String msg = sentences.get(i).toLowerCase();
 			// Replace all punctuation so it doesn't interfere with responses
 			msg = msg.replace(',', (char)32);
 			
@@ -503,7 +503,13 @@ public class Window extends JFrame implements KeyListener{
 	    	
 	    }
 	    
-	    
+	    public static String assist(String s) {
+			String res = s;
+			List<Object[]> list =  CoRef(s);
+			for(int i = 0; i < list.size();i++)
+				res = replace(res, list.get(i));
+			return res;
+		}
 		 //coreference resolution
 	    /*********************
 	     * Determines the coreferences for the sentence, then puts them into an array with
@@ -513,18 +519,14 @@ public class Window extends JFrame implements KeyListener{
 	     * @return list of equivalant words
 	     */
 		public static List<Object[]> CoRef(String s) {
-//				Pipeline p = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,coref","","");
+				Pipeline p = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,coref","","");
 				List<Object[]> list = new ArrayList<Object[]>();
 			    Annotation document = new Annotation(s);
-			    Properties properties = new Properties();
-			    properties.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,coref");
-			    StanfordCoreNLP pipeline = new StanfordCoreNLP(properties);
-			    pipeline.annotate(document);
-//			    p.getPipe().annotate(document);
+			    p.getPipe().annotate(document);
 			    for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
 			      list.add(extract(cc.getMentionMap().values().toArray()));		   
 			    }
-				return list;
+			 return list;
 		}
 
 		public static Object[] extract(Object[] A) {
@@ -533,7 +535,7 @@ public class Window extends JFrame implements KeyListener{
 			return A;
 		}
 		
-		
+	
 		/****************
 		 * Takes in A string s then takes the first item in equivalence list, then replaces all appearances of the 
 		 * following strings in the list, with the first item in the list. 
@@ -544,12 +546,11 @@ public class Window extends JFrame implements KeyListener{
 		 * @return The updated sentence.
 		 */
 		public static String replace(String s,Object[] replace) {
-			String result = "";
 			String replacer = replace[0].toString();//value that is going to replace next
 			for(int i = 1; i < replace.length;i++) {
 				if(s.contains(replace[i].toString()))
 					s=s.replace(replace[i].toString(), replacer);
 			}
-			return result;
+			return s;
 		}
 }
