@@ -44,6 +44,8 @@ public class Window extends JFrame implements KeyListener{
 	//This is to load the image of the bot into an icon form
 	ImageIcon icon = new ImageIcon("img/bot.png");
 	StanfordCoreNLP pipeline;
+	//Variable to keep track how positive vs. negative the conversation is
+	int Sentiment=0;
 
 
 	
@@ -234,6 +236,15 @@ public class Window extends JFrame implements KeyListener{
 		//A string list of all the named entities detected by corenlp
 		List<String> namedEntities = getNameEntityList(s);
 		addText("\n-->Elon:\t");
+		if(Sentiment==1) {
+			addText("Glad to hear that you are feeling positive\n");
+			Sentiment=0;
+			addText("\n-->Elon:\t");
+		}else if(Sentiment==-1) {
+			addText("I am sorry it seems that you are a bit negative.\n");
+			Sentiment=0;
+			addText("\n-->Elon:\t");
+		}
 		//if it is hello print a greeting
 		if(sent.contains("hello")||sent.contains("hi")||sent.contains("hey")) {
 			r=0;
@@ -503,13 +514,18 @@ public class Window extends JFrame implements KeyListener{
 	    	//go through each sentence and get the sentiment
 	    	for(CoreSentence sentence: sentences) {
 	    		String sentiment = sentence.sentiment();
-	    		if(sentiment.equalsIgnoreCase("Positive"))
+	    		if(sentiment.equalsIgnoreCase("Positive")) {
 	    			temp=1;
-	    		else if(sentiment.equalsIgnoreCase("Negative"))
+	    			Sentiment++;
+	    		}
+	    		else if(sentiment.equalsIgnoreCase("Negative")) {
 	    			temp=-1;
+	    			Sentiment--;
+	    		}
 	    		else
 	    			temp=0;
 	    		System.out.println(sentiment+","+temp+ "\t"+ txt);
+
 	    	}
 	    	
 	    	return temp;
