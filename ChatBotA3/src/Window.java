@@ -39,6 +39,7 @@ public class Window extends JFrame implements KeyListener{
 	//This is to load the image of the bot into an icon form
 	ImageIcon icon = new ImageIcon("img/bot.png");
 	Pipeline pipeline;
+	List<Object[]> temp = CoRef("");
 
 
 
