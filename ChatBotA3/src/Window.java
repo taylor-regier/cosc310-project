@@ -479,19 +479,21 @@ public class Window extends JFrame implements KeyListener{
 	    
 		 //coreference resolution
 	    /*********************
-	     * Determins the coreferences for the sentence, then puts them into an array with
+	     * Determines the coreferences for the sentence, then puts them into an array with
 	     * equvalent words, all equivalent words are in the same array. If multiple 
 	     * equivalences exist will return a list of arrays
 	     * @param sentence that will be solved
 	     * @return list of equivalant words
 	     */
 		public static List<Object[]> CoRef(String s) {
+//				Pipeline p = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,coref","","");
 				List<Object[]> list = new ArrayList<Object[]>();
 			    Annotation document = new Annotation(s);
 			    Properties properties = new Properties();
 			    properties.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,coref");
 			    StanfordCoreNLP pipeline = new StanfordCoreNLP(properties);
 			    pipeline.annotate(document);
+//			    p.getPipe().annotate(document);
 			    for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
 			      list.add(extract(cc.getMentionMap().values().toArray()));		   
 			    }
