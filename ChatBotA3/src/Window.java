@@ -208,7 +208,8 @@ public class Window extends JFrame implements KeyListener{
 	//The method that will get the bots response
 	public void response(String s, Boolean question) {
 		int r,c;
-		String initMsg = assist(s);
+		//String initMsg = assist(s);
+		String initMsg = s;
 		initMsg = initMsg.replace('.', (char)62);
 		initMsg = initMsg.replace('?', (char)62);
 
