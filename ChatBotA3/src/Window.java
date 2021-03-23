@@ -30,10 +30,6 @@ import edu.stanford.nlp.semgraph.*;
 import edu.stanford.nlp.trees.*;
 
 
-
-
-
-
 public class Window extends JFrame implements KeyListener{
 	//Here we make a window that will contain our text area box and the input box at the bottom as well as a scroll bar the shows up when needed
 	JPanel pane= new JPanel();
@@ -45,7 +41,7 @@ public class Window extends JFrame implements KeyListener{
 	Pipeline pipeline;
 
 
-	
+
 	//This 2D array will contain the bots responses
 	String[][] Responses= {
 			//greeting
@@ -64,15 +60,15 @@ public class Window extends JFrame implements KeyListener{
 				"In 2015 I co-founded OpenAI, a non profit reasearch company.",
 				"In 2016 I founded Neuralink, a company that focuses on bran-computer interactions.",
 				"In 2006 I helped create SolarCity.",
-				"The main companies I have been involved in are: Zip2,SpaceX,Tesla,OpenAI,Neuralink and SolarCity"},
+			"The main companies I have been involved in are: Zip2,SpaceX,Tesla,OpenAI,Neuralink and SolarCity"},
 			//general random interests
 			{ "I'm a big fan of dogecoin, and all forms of cryptocurrency!", "Spaceships are cool I guess.",
-					"I love cars! I remember when I bought my first McLaren F1.", "I love anime!" },
+				"I love cars! I remember when I bought my first McLaren F1.", "I love anime!" },
 			// Interests facts
 			{ "Probably Parasite, it was definitely the best movie of 2019.",
 					"Black Mirror, I really like the concepts it explores.",
 					"I really enjoyed Your Name, but I'm also a fan of Studio Ghibli. Princess Mononoke is one of my\n\tfavourite films by them.",
-					"My favourite airplane is the SR-71 Blackbird. The A-XII in X AE A-XII is the predecessor to\n\tthis plane." },
+			"My favourite airplane is the SR-71 Blackbird. The A-XII in X AE A-XII is the predecessor to\n\tthis plane." },
 			//Life Facts
 			{"I was born in Pretoria, South Africa.", "June 28 1971.","Thank you for asking. I'm 49 now and will be 50 this year.", 
 				"My parents were Maye who was my mother and Errol who was my father. I am not very fond\n\tof my father."," I have two siblings. Tosca who is my sister and Kimbal who is my brother",
@@ -84,16 +80,20 @@ public class Window extends JFrame implements KeyListener{
 				"When I was 12 I sold my first game Blastar for $500.",
 				"I taught myself to code when I was around 10 years old.",
 				"I mainly spend my time between SpaceX and Tesla, and I'm heavily involved with the engineering decisions\n\tat those companies. I also spend a lot of my time at OpenAI too.",
-				"I own a lot of cars, but mainly drive my Model S. Though I only drive Teslas now, I've owned a \n\t1978 BMW 320i and a 1967 Jaguar (E-type)."
-				},
+				"I own a lot of cars, but mainly drive my Model S. Though I only drive Teslas now, I've owned a \n\t1978 BMW 320i and a 1967 Jaguar (E-type).",
+				"She is from Canada originally. She was born and raised in Vancouver."},
 			//Appearances/Interviews
 			{ "I had a cameo in The Simpsons, The Big Bang theory, South Park, and Rick and Morty. Maybe\n\tyou've seen one of my episodes?",
-			  "Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..." },
-			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man doesn't?", "Maybe"}
-				
+			"Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..."},
+			
+			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man doesn't?", "Maybe"},
+			
+			//Bezos rivalry
+			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space.",
+				"Like him? We have a bit of a rivalry going you know, so things can be a little tense between us I'd say."}
 
 	};
-	
+
 	//Constructor to create the window
 	public Window() {
 		//set the title
@@ -108,25 +108,25 @@ public class Window extends JFrame implements KeyListener{
 		//For our window we need to add our scrollbar and our input text box
 		pane.add(sideBar);
 		pane.add(input);
-		
-		
-		
-	    //Core NLP stuff taken directly from their website.
-		
-	    // set up pipeline properties
+
+
+
+		//Core NLP stuff taken directly from their website.
+
+		// set up pipeline properties
 		pipeline = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote, sentiment", "coref.algorithm", "neural");
-	
+
 		//Add a GIF as a jLabel based on URL.
 		try {
-		//GIF: Harrington, D. (2020). Pixel-Robot[GIF]. Retrieved from https://opengameart.org/content/pixel-robot.
-		URL url = new URL("https://opengameart.org/sites/default/files/robot-idle.gif");
-		JLabel gif = new JLabel(new ImageIcon(new ImageIcon(url).getImage().getScaledInstance(78, 78, Image.SCALE_DEFAULT)));
-		pane.add(gif);
+			//GIF: Harrington, D. (2020). Pixel-Robot[GIF]. Retrieved from https://opengameart.org/content/pixel-robot.
+			URL url = new URL("https://opengameart.org/sites/default/files/robot-idle.gif");
+			JLabel gif = new JLabel(new ImageIcon(new ImageIcon(url).getImage().getScaledInstance(78, 78, Image.SCALE_DEFAULT)));
+			pane.add(gif);
 		}
 		catch(MalformedURLException e) {
 			System.out.println(e);
 		}
-		
+
 		//set the background image of the window
 		pane.setBackground(new Color(0,150,200));
 		//add the pane
@@ -142,20 +142,20 @@ public class Window extends JFrame implements KeyListener{
 		setVisible(true);
 		//Calling the addText method to add text to the text ares
 		addText("\t\t\tPlease type Q to end the conversation\n" );
-		
-		
-		
+
+
+
 	}
 
 	//Don't use this method atm
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	//a method that is called when button is pressed
 	public void keyPressed(KeyEvent e) {
-		
+
 		//if the key pressed is enter
 		if(e.getKeyCode()==KeyEvent.VK_ENTER) {
 			//set the input field so it is not editable
@@ -166,7 +166,7 @@ public class Window extends JFrame implements KeyListener{
 			input.setText("");
 			//Call the method that adds the text to the text are
 			addText("\n-->You:\t"+msg+"\n");
-			
+
 			//Check to see if the input is a question.
 			Boolean question;
 			if(msg.indexOf('?') != -1) 
@@ -175,8 +175,8 @@ public class Window extends JFrame implements KeyListener{
 				question = false;
 			//call the response method sending the msg String and boolean question which is true if a question was asked
 			response(msg, question);
-			
-			
+
+
 		}
 	}
 
@@ -185,275 +185,302 @@ public class Window extends JFrame implements KeyListener{
 		//if the key was enter set the input field back so it is editable
 		if(e.getKeyCode()==KeyEvent.VK_ENTER)
 			input.setEditable(true);
-		
-		
+
+
 	}
 	//add text method to text area
 	public void addText(String s) {
-	talkArea.setText(talkArea.getText()+s);
+		talkArea.setText(talkArea.getText()+s);
 	}
-	
-	
+
+
 	//A delay method I wanted to implement so the bot seems human and is taking time to reply
 	public void delay(int seconds) {
 		try {
-		    Thread.sleep(seconds * 1000);
+			Thread.sleep(seconds * 1000);
 		} catch (InterruptedException ie) {
-		    Thread.currentThread().interrupt();
+			Thread.currentThread().interrupt();
 		}
 	}
-	
+
 	//The method that will get the bots response
 	public void response(String s, Boolean question) {
 		int r,c;
-		//Make msg lower case so that s is intact and case doesn't matter for sent
-		String msg = s.toLowerCase();
-		// Replace all punctuation so it doesn't interfere with responses
-		msg = msg.replace('?', (char)32);
-		msg = msg.replace(',', (char)32);
-		msg = msg.replace('.', (char)32);
-		//trim the end of whitespaces
-		msg=msg.trim();
-		//make a list of every word in the message
-		List<String> sent = Arrays.asList(msg.split(" "));
-		//A string list of all the named entities detected by corenlp
-		List<String> namedEntities = getNameEntityList(s);
-		addText("\n-->Elon:\t");
-		//if it is hello print a greeting
-		if(sent.contains("hello")||sent.contains("hi")||sent.contains("hey")) {
-			r=0;
-			c=0;
+
+		String initMsg = s;
+		initMsg = initMsg.replace('.', (char)62);
+		initMsg = initMsg.replace('?', (char)62);
+
+		List<String> sentences = Arrays.asList(initMsg.split(">"));
+
+		for (int i=0; i < sentences.size(); i++) {
+
+			//Make msg lower case so that s is intact and case doesn't matter for sent
+			String msg = sentences.get(i).toLowerCase();
+			// Replace all punctuation so it doesn't interfere with responses
+			msg = msg.replace(',', (char)32);
 			
-			//Saying Hi i'm [name], gives this response. Likely the name is the first entity in the sentence if done correctly, so elon will repeat your name back.
-			if(sent.contains("im")||sent.contains("i'm")||(sent.contains("i")&&sent.contains("am"))||(sent.contains("my")&&sent.contains("name"))&&!namedEntities.isEmpty()){
-				String name = namedEntities.get(0);
-				//makes the first letter capital
-				name = name.substring(0,1).toUpperCase() + name.substring(1);
-				//response
-				addText("Nice to meet you " + name + ". You have a nice name.\n");
+			//trim the end of whitespaces
+			msg=msg.trim();
+			//make a list of every word in the message
+			List<String> sent = Arrays.asList(msg.split(" "));
+			//A string list of all the named entities detected by corenlp
+			List<String> namedEntities = getNameEntityList(s);
+			addText("\n-->Elon:\t");
+			//if it is hello print a greeting
+			if(sent.contains("hello")||sent.contains("hi")||sent.contains("hey")) {
+				r=0;
+				c=0;
+
+				//Saying Hi i'm [name], gives this response. Likely the name is the first entity in the sentence if done correctly, so elon will repeat your name back.
+				if(sent.contains("im")||sent.contains("i'm")||(sent.contains("i")&&sent.contains("am"))||(sent.contains("my")&&sent.contains("name"))&&!namedEntities.isEmpty()){
+					String name = namedEntities.get(0);
+					//makes the first letter capital
+					name = name.substring(0,1).toUpperCase() + name.substring(1);
+					//response
+					addText("Nice to meet you " + name + ". You have a nice name.\n");
+					addText("\n-->Elon:\t");
+				}
+			}
+			//response to how are you?
+			// #2 response bug one -> added sent.contains !old so how old are you does not trigger. 
+			else if(sent.contains("how")&&sent.contains("are")&&sent.contains("you")&&!sent.contains("old")) {
+				r=0;
+				c=1;
+				//Thats a great question doesn't really make sense.
+				question = false;
+
+			}
+			//--------------------------------------------------Life Facts---------------------------------------------------------//	
+			// Asking where born
+			else if(sent.contains("where")&&sent.contains("born")) {
+				r = 7;
+				c = 0;
+			}//Asking when born
+			else if(sent.contains("when")&&sent.contains("born")) {
+				r = 7;
+				c = 1;
+			}//Asking age. Fix #3 Need to change && between you and your to || implemented 
+			else if((sent.contains("old")||sent.contains("age"))&&(sent.contains("you")||sent.contains("your"))) {
+				r = 7;
+				c = 2;
+				//Thats a great question doesn't really make sense with response.
+				question = false;
+			}
+			else if(sent.contains("who")&&sent.contains("parents")) {
+				r = 7;
+				c = 3;
+			}
+			else if(sent.contains("siblings")||sent.contains("brother")||sent.contains("sister")) {
+				r = 7;
+				c = 4;
+			}
+			else if(sent.contains("education")||sent.contains("school")) {
+				r = 7;
+				c = 5;
+			}
+			else if((sent.contains("first")||sent.contains("1st"))&&sent.contains("wife")) {
+				r = 7;
+				c = 7;
+			}
+			else if((sent.contains("second")||sent.contains("2nd"))&&sent.contains("wife")) {
+				r = 7;
+				c = 8;
+			}
+			else if(sent.contains("wife")||sent.contains("married")) {
+				r = 7;
+				c = 6;
+			}
+			else if((sent.contains("currently")||sent.contains("dating"))&&namedEntities.contains("grimes")) {
+				r = 7;
+				c = 9;
+			}
+			//Elon's first software he made or game he created.
+			else if(sent.contains("first")&&(sent.contains("software")||sent.contains("game"))) {
+				r =7;
+				c = 10;
+			}//issue #7 can now ask when did you learn programming and when did you learn to program
+			else if((sent.contains("when")||sent.contains("how"))&&sent.contains("learn")&&(sent.contains("code")||sent.contains("program")||sent.contains("programming"))) {
+				r = 7;
+				c = 11;
+			}
+			else if (sent.contains("spend")&&(sent.contains("time")||sent.contains("freetime"))){
+				r = 7;
+				c = 12;
+
+			}
+			// intended input: what cars do you own? or what car do you drive?
+			else if((sent.contains("cars")||sent.contains("car"))&&(sent.contains("drive")||sent.contains("own"))) {
+				r = 7;
+				c = 13;
+
+			}
+			else if((sent.contains("canada")||sent.contains("where"))&&sent.contains("from")&&namedEntities.contains("grimes")) {
+				r = 7;
+				c = 14;
+			}
+			//--------------------------------------------------Appearances/interviews---------------------------------------------------------//	
+			//Shows he has appeared in.
+			else if((sent.contains("shows")||sent.contains("show"))&&sent.contains("appeared")) {
+				r = 8;
+				c = 0;
+			}
+			//Joe rogan podcast
+			else if(namedEntities.contains("joe rogan")) {
+				r= 8;
+				c= 1;
+
+			}
+			//--------------------------------------------------Interests---------------------------------------------------------//		
+			//Asking about specific favorite things
+			else if((sent.contains("favourite")||sent.contains("favorite"))&&sent.contains("movie")) {
+				r = 6;
+				c = 0;
+			}
+			//Favorite show
+			else if((sent.contains("favourite")||sent.contains("favorite"))&&(sent.contains("series")||sent.contains("show"))) {
+				r = 6;	
+				c = 1;
+			}
+			else if((sent.contains("favourite")||sent.contains("favorite"))&&(sent.contains("anime"))) {
+				r = 6;	
+				c = 2;
+			}
+			else if((sent.contains("favourite")||sent.contains("favorite"))&&(sent.contains("aircraft")||sent.contains("airplane"))) {
+				r = 6;
+				c = 3;
+			}
+			// Random favorite thing
+			else if((sent.contains("favorite")||sent.contains("favourite"))&&(sent.contains("things")||sent.contains("hobbies")||sent.contains("thing"))) {
+				r = 5;
+				c=(int)Math.round(Math.random()*3);
+			}
+
+			//----------------------------------------------------Career----------------------------------------------------------//
+
+			else if(sent.contains("zip2")||(sent.contains("first")&&(sent.contains("company")||sent.contains("business")))) {
+				r = 4;
+				c = 0;
+			}
+			//SpaceX
+			else if(sent.contains("spacex")) {
+				r = 4;
+				c = 1;
+			}
+			//tesla
+			else if(namedEntities.contains("tesla")) {
+				r = 4;
+				c = 2;
+			}
+			//paypal
+			else if(namedEntities.contains("x.com")||sent.contains("confinity")||namedEntities.contains("ebay")||namedEntities.contains("paypal")) {
+				r = 4;
+				c = 3;
+			}
+			//OpenAI
+			else if(sent.contains("openai")) {
+				r = 4;
+				c = 4;
+			}
+			//Neuralink
+			else if(namedEntities.contains("neuralink")) {
+				r = 4;
+				c = 5;
+			}
+			//solar city
+			else if(sent.contains("solarcity")) {
+				r = 4;
+				c = 6;
+			}
+			// list of all major companies
+			else if((sent.contains("companies")||sent.contains("businesses"))&&sent.contains("what")) {
+				r = 4;
+				c = 7;
+			}
+			
+			//----------------------------------------------------Bezos Rivalry----------------------------------------------------------//
+			
+			else if(sent.contains("know")&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 0;
+			}
+			
+			else if(sent.contains("like")&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 1;
+			}
+			
+			
+			//Ask Elon about places he has been
+			else if(sent.contains("have")&&sent.contains("you")&&sent.contains("been")&&sent.contains("to")) {
+				// namedEntities will be empty if an recognized location is entered by corenlp
+				if(!namedEntities.isEmpty()) {
+					int rnd = (int)Math.round(Math.random()*(namedEntities.size()-1));
+					//If multiple places are entered elon will randomnly pick one
+					String place = namedEntities.get(rnd);
+
+					place = place.substring(0,1).toUpperCase() + place.substring(1);
+					addText("I can't remember if i've been to " + place + ", but " + place + " sure seems like it's lovely!\n");
+					addText("\n-->Elon:\t");
+				}
+				else {
+					addText("Been to where?\n");
+					addText("\n-->Elon:\t");
+				}
+
+				r = 9;
+				c=(int)Math.round(Math.random()*2);
+
+
+			}
+			//----------------------------------------Easter Egg--------------------------------------------------------//
+			else if(s.toLowerCase().equals("the earth king has invited you to lake laogai.")) {
+				addText("I am honored to accept his invitation.\n");
+				addText("\n-->Elon:\t");
+				r = 2;
+				c=  0;
+
+			}
+
+			//------------------------------------------------------Random-----------------------------------------------//
+			else if(sent.contains("thanks")||(sent.contains("thank")&&sent.contains("you"))) {
+				r = 1;
+				c = 0;
+			}
+			//if its q end the chat and disable the input field
+			else if(sent.contains("q")) {
+				r=3;
+				c=(int)Math.round(Math.random()*4);
+				input.disable();
+			}
+			//default case
+			else {
+				r=2;
+				c=0;
+			}
+
+			// If the msg received was a question and the response is not default. There is a 1/5 chance bot responds this.
+			if(question&&r!=2&&((int)Math.round(Math.random()*4))==4) {
+				addText("That's a great question!\n");
 				addText("\n-->Elon:\t");
 			}
 
+			//add the response to the text Area
+			addText(Responses[r][c]+"\n");	
+
+			//again checking if it was q and making a visible message saying the chat has ended across window
+			if(sent.contains("q"))
+				addText("--------------------------------------------Chat Has Ended--------------------------------------------");
+
+
+			//Changed length from the og below. Fixed bug where the window moves out of frame on the x axis when q is pressed. 
+			//addText("-------------------------------------------------------------------------------------Chat Has Ended------------------------------------------------------------------------------------");
+
 		}
-		//response to how are you?
-		// #2 response bug one -> added sent.contains !old so how old are you does not trigger. 
-		else if(sent.contains("how")&&sent.contains("are")&&sent.contains("you")&&!sent.contains("old")) {
-			r=0;
-			c=1;
-			//Thats a great question doesn't really make sense.
-			question = false;
-			
-		}
-//--------------------------------------------------Life Facts---------------------------------------------------------//	
-			// Asking where born
-		else if(sent.contains("where")&&sent.contains("born")) {
-			r = 7;
-			c = 0;
-			}//Asking when born
-		else if(sent.contains("when")&&sent.contains("born")) {
-			r = 7;
-			c = 1;
-		}//Asking age. Fix #3 Need to change && between you and your to || implemented 
-		else if((sent.contains("old")||sent.contains("age"))&&(sent.contains("you")||sent.contains("your"))) {
-			r = 7;
-			c = 2;
-			//Thats a great question doesn't really make sense with response.
-			question = false;
-		}
-		else if(sent.contains("who")&&sent.contains("parents")) {
-			r = 7;
-			c = 3;
-		}
-		else if(sent.contains("siblings")||sent.contains("brother")||sent.contains("sister")) {
-			r = 7;
-			c = 4;
-		}
-		else if(sent.contains("education")||sent.contains("school")) {
-			r = 7;
-			c = 5;
-		}
-		else if((sent.contains("first")||sent.contains("1st"))&&sent.contains("wife")) {
-			r = 7;
-			c = 7;
-		}
-		else if((sent.contains("second")||sent.contains("2nd"))&&sent.contains("wife")) {
-			r = 7;
-			c = 8;
-		}
-		else if(sent.contains("wife")||sent.contains("married")) {
-			r = 7;
-			c = 6;
-		}
-		else if(sent.contains("currently")||sent.contains("dating")||namedEntities.contains("grimes")) {
-			r = 7;
-			c = 9;
-		}
-		//Elon's first software he made or game he created.
-		else if(sent.contains("first")&&(sent.contains("software")||sent.contains("game"))) {
-			r =7;
-			c = 10;
-		}//issue #7 can now ask when did you learn programming and when did you learn to program
-		else if((sent.contains("when")||sent.contains("how"))&&sent.contains("learn")&&(sent.contains("code")||sent.contains("program")||sent.contains("programming"))) {
-			r = 7;
-			c = 11;
-		}
-		else if (sent.contains("spend")&&(sent.contains("time")||sent.contains("freetime"))){
-			r = 7;
-			c = 12;
-			
-		}
-		// intended input: what cars do you own? or what car do you drive?
-		else if((sent.contains("cars")||sent.contains("car"))&&(sent.contains("drive")||sent.contains("own"))) {
-			r = 7;
-			c = 13;
-			
-		}
-//--------------------------------------------------Appearances/interviews---------------------------------------------------------//	
-		//Shows he has appeared in.
-		else if((sent.contains("shows")||sent.contains("show"))&&sent.contains("appeared")) {
-			r = 8;
-			c = 0;
-		}
-		//Joe rogan podcast
-		else if(namedEntities.contains("joe rogan")) {
-		   r= 8;
-		   c= 1;
-		   
-		}
-//--------------------------------------------------Interests---------------------------------------------------------//		
-		//Asking about specific favorite things
-		else if((sent.contains("favourite")||sent.contains("favorite"))&&sent.contains("movie")) {
-			r = 6;
-			c = 0;
-			}
-		//Favorite show
-		else if((sent.contains("favourite")||sent.contains("favorite"))&&(sent.contains("series")||sent.contains("show"))) {
-			r = 6;	
-			c = 1;
-		    }
-		else if((sent.contains("favourite")||sent.contains("favorite"))&&(sent.contains("anime"))) {
-			r = 6;	
-			c = 2;
-		    }
-		else if((sent.contains("favourite")||sent.contains("favorite"))&&(sent.contains("aircraft")||sent.contains("airplane"))) {
-			r = 6;
-			c = 3;
-		}
-		// Random favorite thing
-		else if((sent.contains("favorite")||sent.contains("favourite"))&&(sent.contains("things")||sent.contains("hobbies")||sent.contains("thing"))) {
-			r = 5;
-			c=(int)Math.round(Math.random()*3);
-		}
-		
-//----------------------------------------------------Career----------------------------------------------------------//
-		
-		else if(sent.contains("zip2")||(sent.contains("first")&&(sent.contains("company")||sent.contains("business")))) {
-			r = 4;
-			c = 0;
-		}
-		//SpaceX
-		else if(sent.contains("spacex")) {
-			r = 4;
-			c = 1;
-		}
-		//tesla
-		else if(namedEntities.contains("tesla")) {
-			r = 4;
-			c = 2;
-		}
-		//paypal
-		else if(namedEntities.contains("x.com")||sent.contains("confinity")||namedEntities.contains("ebay")||namedEntities.contains("paypal")) {
-			r = 4;
-			c = 3;
-		}
-		//OpenAI
-		else if(sent.contains("openai")) {
-			r = 4;
-			c = 4;
-		}
-		//Neuralink
-		else if(namedEntities.contains("neuralink")) {
-			r = 4;
-			c = 5;
-		}
-		//solar city
-		else if(sent.contains("solarcity")) {
-			r = 4;
-			c = 6;
-		}
-		// list of all major companies
-		else if((sent.contains("companies")||sent.contains("businesses"))&&sent.contains("what")) {
-			r = 4;
-			c = 7;
-			
-		}//Ask Elon about places he has been
-		else if(sent.contains("have")&&sent.contains("you")&&sent.contains("been")&&sent.contains("to")) {
-			// namedEntities will be empty if an recognized location is entered by corenlp
-			if(!namedEntities.isEmpty()) {
-				int rnd = (int)Math.round(Math.random()*(namedEntities.size()-1));
-				//If multiple places are entered elon will randomnly pick one
-				String place = namedEntities.get(rnd);
-				
-				place = place.substring(0,1).toUpperCase() + place.substring(1);
-				addText("I can't remember if i've been to " + place + ", but " + place + " sure seems like it's lovely!\n");
-				addText("\n-->Elon:\t");
-			}
-			else {
-				addText("Been to where?\n");
-				addText("\n-->Elon:\t");
-			}
-			
-		    r = 9;
-		    c=(int)Math.round(Math.random()*2);
-			
-			
-		}
-//----------------------------------------Easter Egg--------------------------------------------------------//
-		else if(s.toLowerCase().equals("the earth king has invited you to lake laogai.")) {
-			addText("I am honored to accept his invitation.\n");
-			addText("\n-->Elon:\t");
-			r = 2;
-			c=  0;
-			
-		}
-		
-//------------------------------------------------------Random-----------------------------------------------//
-		else if(sent.contains("thanks")||(sent.contains("thank")&&sent.contains("you"))) {
-			r = 1;
-			c = 0;
-		}
-		//if its q end the chat and disable the input field
-		else if(sent.contains("q")) {
-			r=3;
-			c=(int)Math.round(Math.random()*4);
-			input.disable();
-		}
-		//default case
-		else {
-			r=2;
-			c=0;
-		}
-		
-	    // If the msg received was a question and the response is not default. There is a 1/5 chance bot responds this.
-		if(question&&r!=2&&((int)Math.round(Math.random()*4))==4) {
-			addText("That's a great question!\n");
-			addText("\n-->Elon:\t");
-		}
-		
-		//add the response to the text Area
-		addText(Responses[r][c]+"\n");	
-		
-		//again checking if it was q and making a visible message saying the chat has ended across window
-		if(sent.contains("q"))
-			addText("--------------------------------------------Chat Has Ended--------------------------------------------");
-		
-		
-		//Changed length from the og below. Fixed bug where the window moves out of frame on the x axis when q is pressed. 
-		//addText("-------------------------------------------------------------------------------------Chat Has Ended------------------------------------------------------------------------------------");
 	}	 
 
-	   
-	
+
+
 	//Get a list of namedEntitys from the string and then convert those named entities to strings in a new list
 	    public List<String> getNameEntityList(String s){
 	    	
@@ -525,5 +552,4 @@ public class Window extends JFrame implements KeyListener{
 			}
 			return result;
 		}
-	 
 }
