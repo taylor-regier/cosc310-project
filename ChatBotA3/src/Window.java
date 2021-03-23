@@ -21,8 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import edu.stanford.nlp.pipeline.CoreEntityMention;
-import edu.stanford.nlp.pipeline.CoreSentence;
+import edu.stanford.nlp.coref.CorefCoreAnnotations;
 import edu.stanford.nlp.coref.data.CorefChain;
 import edu.stanford.nlp.ling.*;
 import edu.stanford.nlp.ie.util.*;
@@ -40,6 +39,7 @@ public class Window extends JFrame implements KeyListener{
 	//This is to load the image of the bot into an icon form
 	ImageIcon icon = new ImageIcon("img/bot.png");
 	Pipeline pipeline;
+	List<Object[]> temp = CoRef("");
 
 
 
@@ -203,21 +203,21 @@ public class Window extends JFrame implements KeyListener{
 			Thread.currentThread().interrupt();
 		}
 	}
+	
 
 	//The method that will get the bots response
 	public void response(String s, Boolean question) {
 		int r,c;
-
-		String initMsg = s;
+		String initMsg = assist(s);
 		initMsg = initMsg.replace('.', (char)62);
 		initMsg = initMsg.replace('?', (char)62);
 
 		List<String> sentences = Arrays.asList(initMsg.split(">"));
-
+		
+		
 		for (int i=0; i < sentences.size(); i++) {
-
 			//Make msg lower case so that s is intact and case doesn't matter for sent
-			String msg = sentences.get(i).toLowerCase();
+			 String msg = sentences.get(i).toLowerCase();
 			// Replace all punctuation so it doesn't interfere with responses
 			msg = msg.replace(',', (char)32);
 			
@@ -483,39 +483,75 @@ public class Window extends JFrame implements KeyListener{
 
 
 	//Get a list of namedEntitys from the string and then convert those named entities to strings in a new list
-	public List<String> getNameEntityList(String s){
-
-		List<String> list = new ArrayList();
-		//document for corenlp
-		CoreDocument document = new CoreDocument(s);
-		// annnotate the document
-		pipeline.getPipe().annotate(document);
-		// get entities from the document
-		List<CoreEntityMention> entityMentions = document.entityMentions();
-		//print entities
-		System.out.println(entityMentions.toString());
-		//Convert entities to their string representations and add to the list
-		for(int i = 0; i<entityMentions.size();i++) {
-			list.add(entityMentions.get(i).toString().toLowerCase());
+	    public List<String> getNameEntityList(String s){
+	    	
+	    	List<String> list = new ArrayList();
+            //document for corenlp
+		    CoreDocument document = new CoreDocument(s);
+		    // annnotate the document
+		    pipeline.getPipe().annotate(document);
+		    // get entities from the document
+			List<CoreEntityMention> entityMentions = document.entityMentions();
+			//print entities
+			System.out.println(entityMentions.toString());
+			//Convert entities to their string representations and add to the list
+			for(int i = 0; i<entityMentions.size();i++) {
+				list.add(entityMentions.get(i).toString().toLowerCase());
+			}
+	
+	    	
+	    	return list;
+	    	
+	    }
+	    
+	    public static String assist(String s) {
+			String res = s;
+			List<Object[]> list =  CoRef(s);
+			for(int i = 0; i < list.size();i++)
+				res = replace(res, list.get(i));
+			return res;
+		}
+		 //coreference resolution
+	    /*********************
+	     * Determines the coreferences for the sentence, then puts them into an array with
+	     * equvalent words, all equivalent words are in the same array. If multiple 
+	     * equivalences exist will return a list of arrays
+	     * @param sentence that will be solved
+	     * @return list of equivalant words
+	     */
+		public static List<Object[]> CoRef(String s) {
+				Pipeline p = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,coref","","");
+				List<Object[]> list = new ArrayList<Object[]>();
+			    Annotation document = new Annotation(s);
+			    p.getPipe().annotate(document);
+			    for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
+			      list.add(extract(cc.getMentionMap().values().toArray()));		   
+			    }
+			 return list;
 		}
 
-
-		return list;
-
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		public static Object[] extract(Object[] A) {
+			for (int i = 0;i < A.length;i++)
+				A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
+			return A;
+		}
+		
+	
+		/****************
+		 * Takes in A string s then takes the first item in equivalence list, then replaces all appearances of the 
+		 * following strings in the list, with the first item in the list. 
+		 * NOTE: MUST CAST
+		 * OBJECT[] WHEN CALLING METHOD.
+		 * @param Sentence that is to be updated
+		 * @param Equivalence matrix, that determines what is to be replaced, and by what
+		 * @return The updated sentence.
+		 */
+		public static String replace(String s,Object[] replace) {
+			String replacer = replace[0].toString();//value that is going to replace next
+			for(int i = 1; i < replace.length;i++) {
+				if(s.contains(replace[i].toString()))
+					s=s.replace(replace[i].toString(), replacer);
+			}
+			return s;
+		}
 }
