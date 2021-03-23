@@ -33,8 +33,6 @@ import edu.stanford.nlp.trees.*;
 
 
 
-
-
 public class Window extends JFrame implements KeyListener{
 	//Here we make a window that will contain our text area box and the input box at the bottom as well as a scroll bar the shows up when needed
 	JPanel pane= new JPanel();
@@ -58,7 +56,7 @@ public class Window extends JFrame implements KeyListener{
 			//Goodbye
 			{"It was a pleasure to talk to you","Have a great day","See you later","Goodbye", "We must colonize Mars!"},
 			//Career Facts
-			{"My first company was Zip2,which eventually sold to Compaq for $307 million.",
+			{"My first company was Zip2, which eventually sold to Compaq for $307 million.",
 				"I am the founder of Space Exploration technologies, better known as SpaceX",
 				"In 2008 I took over as CEO of Tesla.",
 				"I was the cofounder of X.com, which later merged with confinity to form paypal and was then \n\tsold to ebay for $1.5 Billion!",
@@ -76,7 +74,7 @@ public class Window extends JFrame implements KeyListener{
 					"My favourite airplane is the SR-71 Blackbird. The A-XII in X AE A-XII is the predecessor to\n\tthis plane." },
 			//Life Facts
 			{"I was born in Pretoria, South Africa.", "June 28 1971.","Thank you for asking. I'm 49 now and will be 50 this year.", 
-				"My parents were Maye who was my mother and Errol who was my father. I am not very fond\n\tof my father."," I have two siblings. Tosca who is my sister and Kimbal who is my brother",
+				"My parents were Maye who was my mother and Errol who was my father. I am not very fond\n\tof my father.","I have two siblings. Tosca who is my sister and Kimbal who is my brother",
 				"I started university in Pretoria, which I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
 				"I have had two wives but those ended in divorce. I am currently am dating the musician Grimes",
 				"My first wife's name was Justine Wilson and we were married from 2000-2008. We had 5 \n\tchildren. One of our kids Nevada unfortunately passed away due to sudden infant death syndrome.",
@@ -90,7 +88,8 @@ public class Window extends JFrame implements KeyListener{
 			//Appearances/Interviews
 			{ "I had a cameo in The Simpsons, The Big Bang theory, South Park, and Rick and Morty. Maybe\n\tyou've seen one of my episodes?",
 			  "Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..." },
-			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man doesn't?", "Maybe"}
+		    //Travel
+			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man doesn't?", "The world is so big!"}
 				
 
 	};
@@ -205,7 +204,7 @@ public class Window extends JFrame implements KeyListener{
 	}
 	
 	//The method that will get the bots response
-	public void response(String s, Boolean question) {
+	public String response(String s, Boolean question) {
 		int r,c;
 		//Make msg lower case so that s is intact and case doesn't matter for sent
 		String msg = s.toLowerCase();
@@ -373,7 +372,7 @@ public class Window extends JFrame implements KeyListener{
 			c = 4;
 		}
 		//Neuralink
-		else if(namedEntities.contains("neuralink")) {
+		else if(sent.contains("neuralink")) {
 			r = 4;
 			c = 5;
 		}
@@ -405,7 +404,7 @@ public class Window extends JFrame implements KeyListener{
 			}
 			
 		    r = 9;
-		    c=(int)Math.round(Math.random()*2);
+		    c=(int)Math.round(Math.random()*3);
 			
 			
 		}
@@ -440,13 +439,17 @@ public class Window extends JFrame implements KeyListener{
 			addText("That's a great question!\n");
 			addText("\n-->Elon:\t");
 		}
-		
+		//String representing response 
+		String response = Responses[r][c];
 		//add the response to the text Area
-		addText(Responses[r][c]+"\n");	
+		addText(response + "\n");	
 		
 		//again checking if it was q and making a visible message saying the chat has ended across window
 		if(sent.contains("q"))
 			addText("--------------------------------------------Chat Has Ended--------------------------------------------");
+		
+		//return response for testing/socket programming
+		return response;
 		
 		
 		//Changed length from the og below. Fixed bug where the window moves out of frame on the x axis when q is pressed. 
