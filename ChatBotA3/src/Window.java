@@ -229,10 +229,10 @@ public class Window extends JFrame implements KeyListener{
 
 
 	//The method that will get the bots response
-	public void response(String s, Boolean question) {
+	public String response(String s, Boolean question) {
 		int r,c;
 		String initMsg = assist(s);
-		
+		String response = "";
 
 		initMsg=initMsg.trim();
 
@@ -579,11 +579,14 @@ public class Window extends JFrame implements KeyListener{
 			addText("--------------------------------------------Chat Has Ended--------------------------------------------");
 		
 		
-		String response = Responses[r][c];
+		response = Responses[r][c];
 		//add the response to the text Area
 		addText(response + "\n");
 		
+		
 	}
+		
+	return response;
 	
 }
 		
