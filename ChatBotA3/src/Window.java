@@ -229,7 +229,7 @@ public class Window extends JFrame implements KeyListener{
 
 
 	//The method that will get the bots response
-	public String response(String s, Boolean question) {
+	public void response(String s, Boolean question) {
 		int r,c;
 		String initMsg = assist(s);
 		
@@ -259,6 +259,7 @@ public class Window extends JFrame implements KeyListener{
 			//A string list of all the named entities detected by corenlp
 			List<String> namedEntities = getNameEntityList(s);
 			addText("\n-->Elon:\t");
+			
 			if(Sentiment==1) {
 				addText(Responses[10][(int)(Math.random()*6)]+"\n");
 				Sentiment=0;
@@ -268,13 +269,16 @@ public class Window extends JFrame implements KeyListener{
 				Sentiment=0;
 				addText("\n-->Elon:\t");
 			}
+			
+			
 			//if it is hello print a greeting
 			if(sent.contains("hello")||sent.contains("hi")||sent.contains("hey")) {
 				r=0;
 				c=0;
 
 				//Saying Hi i'm [name], gives this response. Likely the name is the first entity in the sentence if done correctly, so elon will repeat your name back.
-				if(sent.contains("im")||sent.contains("i'm")||(sent.contains("i")&&sent.contains("am"))||(sent.contains("my")&&sent.contains("name"))&&!namedEntities.isEmpty()){
+				if(sent.contains("im")||sent.contains("i'm")||(sent.contains("i")&&sent.contains("am"))||(sent.contains("my")&&sent.contains("name"))&&!namedEntities.isEmpty())
+				{
 					String name = namedEntities.get(0);
 					//makes the first letter capital
 					name = name.substring(0,1).toUpperCase() + name.substring(1);
@@ -539,12 +543,6 @@ public class Window extends JFrame implements KeyListener{
 				r = 1;
 				c = 0;
 			}
-			//if its q end the chat and disable the input field
-			else if(sent.contains("q")) {
-				r=3;
-				c=(int)Math.round(Math.random()*4);
-				input.disable();
-			}
 //----------------------------------------Easter Egg--------------------------------------------------------//
 		else if(s.toLowerCase().equals("the earth king has invited you to lake laogai.")) {
 			addText("I am honored to accept his invitation.\n");
@@ -553,7 +551,6 @@ public class Window extends JFrame implements KeyListener{
 			c=  0;
 			
 		}
-		
 //------------------------------------------------------Random-----------------------------------------------//
 		else if(sent.contains("thanks")||(sent.contains("thank")&&sent.contains("you"))) {
 			r = 1;
@@ -575,16 +572,24 @@ public class Window extends JFrame implements KeyListener{
 		if(question&&r!=2&&((int)Math.round(Math.random()*4))==4) {
 			addText("That's a great question!\n");
 			addText("\n-->Elon:\t");
+		}
 		
 		//again checking if it was q and making a visible message saying the chat has ended across window
 		if(sent.contains("q"))
 			addText("--------------------------------------------Chat Has Ended--------------------------------------------");
-		return response;
 		
-		//Changed length from the og below. Fixed bug where the window moves out of frame on the x axis when q is pressed. 
-		//addText("-------------------------------------------------------------------------------------Chat Has Ended------------------------------------------------------------------------------------");
+		
+		String response = Responses[r][c];
+		//add the response to the text Area
+		addText(response + "\n");
+		
+	}
+	
+}
+		
 
-	}	 
+		
+		 
 	    
 	    public int analyse(String txt) {
 	    	//document for corenlp
@@ -628,7 +633,7 @@ public class Window extends JFrame implements KeyListener{
 	    	String outmsg = "";
 			while(inmsg!="q") {
 		    inmsg = (String)dis.readUTF();  
-			outmsg = response(inmsg, inmsg.indexOf('?') != -1);
+			//outmsg = response(inmsg, inmsg.indexOf('?') != -1);
 			System.out.println(inmsg);
 			System.out.println(outmsg);
 			dos.writeUTF(outmsg);
@@ -718,3 +723,4 @@ public class Window extends JFrame implements KeyListener{
 		return s;
 	}
 }
+
