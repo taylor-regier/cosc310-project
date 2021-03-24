@@ -55,7 +55,13 @@ public class Window extends JFrame implements KeyListener{
 			//Thank you
 			{"You're welcome"},
 			//Default
-			{"Sorry I did not understand that. I may not have enough updates to understand what you \n\twere asking"},
+			{"Sorry, I didn't understand that. I may not have enough updates to understand what you \n\twere asking.", 
+			 	"Hmm... I'm not sure what you're asking me.", 
+			 	"Sorry, could you rephrase the question?  I didn't understand that.", 
+			 	"A ridiculous question like that doesn't deserve a response.", 
+			 	"I wish I knew how to answer that.", 
+			 	"I'm afraid I don't know what to say. Can you ask me something else?", 
+			 	"Well I'm speechless. Ask me something else."},
 			//Goodbye
 			{"It was a pleasure to talk to you","Have a great day","See you later","Goodbye", "We must colonize Mars!"},
 			//Career Facts
@@ -537,17 +543,37 @@ public class Window extends JFrame implements KeyListener{
 				c=(int)Math.round(Math.random()*4);
 				input.disable();
 			}
-			//default case
-			else {
-				r=2;
-				c=0;
-			}
-
-			// If the msg received was a question and the response is not default. There is a 1/5 chance bot responds this.
-			if(question&&r!=2&&((int)Math.round(Math.random()*4))==4) {
-				addText("That's a great question!\n");
-				addText("\n-->Elon:\t");
-			}
+//----------------------------------------Easter Egg--------------------------------------------------------//
+		else if(s.toLowerCase().equals("the earth king has invited you to lake laogai.")) {
+			addText("I am honored to accept his invitation.\n");
+			addText("\n-->Elon:\t");
+			r = 2;
+			c=  0;
+			
+		}
+		
+//------------------------------------------------------Random-----------------------------------------------//
+		else if(sent.contains("thanks")||(sent.contains("thank")&&sent.contains("you"))) {
+			r = 1;
+			c = 0;
+		}
+		//if its q end the chat and disable the input field
+		else if(sent.contains("q")) {
+			r=3;
+			c=(int)Math.round(Math.random()*4);
+			input.disable();
+		}
+		//default case
+		else {
+			r=2;
+			c=(int)(Math.random()*7);
+		}
+		
+	    // If the msg received was a question and the response is not default. There is a 1/5 chance bot responds this.
+		if(question&&r!=2&&((int)Math.round(Math.random()*4))==4) {
+			addText("That's a great question!\n");
+			addText("\n-->Elon:\t");
+    }
 
 			//add the response to the text Area
 			addText(Responses[r][c]+"\n");	
@@ -559,6 +585,7 @@ public class Window extends JFrame implements KeyListener{
 
 			//Changed length from the og below. Fixed bug where the window moves out of frame on the x axis when q is pressed. 
 			//addText("-------------------------------------------------------------------------------------Chat Has Ended------------------------------------------------------------------------------------");
+
 
 		}
 	}	 
