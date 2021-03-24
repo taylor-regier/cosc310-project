@@ -13,7 +13,7 @@ public class SocketClient {
 		DataInputStream in = new DataInputStream(s.getInputStream());
 		Scanner scan = new Scanner(System.in);
 		String str = "";
-		while(!str.equals("bye")) {
+		while(!str.equals("q")) {
 		str = scan.nextLine();
 		out.writeUTF(str);
 		System.out.println(in.readUTF());

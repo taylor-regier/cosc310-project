@@ -486,6 +486,7 @@ public class Window extends JFrame implements KeyListener{
 	    }
 	    
 	    public void doSocketStuff(int port) {
+	    	System.out.println("Ready to receive....");
 	    	try 
 	    	(ServerSocket serversocket = new ServerSocket(port);
 	    	Socket sock = serversocket.accept();//establishes connection 
@@ -494,7 +495,7 @@ public class Window extends JFrame implements KeyListener{
 	    	{
 	    	String inmsg = "";
 	    	String outmsg = "";
-			while(inmsg!="bye") {
+			while(inmsg!="q") {
 		    inmsg = (String)dis.readUTF();  
 			outmsg = response(inmsg, inmsg.indexOf('?') != -1);
 			System.out.println(inmsg);
