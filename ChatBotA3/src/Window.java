@@ -92,7 +92,7 @@ public class Window extends JFrame implements KeyListener{
 			//Bezos rivalry
 			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space. That meeting didn't go \n\tso well",
 				"Like him? We have a bit of a rivalry going you know, so things can be a little tense between us I'd say.",
-				"To be honest, I think he is running a monoply and he is a copycat for his self-driving car interests.",
+				"To be honest, I do not like that his company Amazon has become a monopoly, and I also think he is a \n\tcopycat for his self-driving car interests.",
 				"Yeah, him and I are not on the greatest terms, and our spaceflight companies are always competing, so I \n\twould say we are rivals.",
 				"We have been rivals ever since a bad meeting in 2004, and it's only grown from there.",
 				"We have had some disgreements over the years and our spaceflight companies have butted heads a few times \n\tbecause they are always competing. Aside from our general disagreements and competing companies, there \n\tare a some notable events that contributed to our rivalry: a bad meeting in 2004, a disagreement between \n\tour companies in 2013, a patent battle between our companies in 2014. If you'd like me to elaborate on any \n\tof those events just ask me 'what happened between you and Jeff Bezos in (insert year).' I also disagree \n\twith his spaceflight company's hiring practices. On a lighter note, we also enjoy jabbing at each other on \n\tTwitter in recent years.",
