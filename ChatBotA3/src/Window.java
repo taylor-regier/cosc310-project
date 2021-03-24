@@ -94,7 +94,7 @@ public class Window extends JFrame implements KeyListener{
 			  "Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..." },
 			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man.", "War... war never changes but men do, through the places they've been"},
 			//Positive sentiment responses
-			{"Glad to hear that you are feeling positive.","You seem to be in a good mood!", "You're annoyingly chipper.", "Wow you're a cheerful one.", "I think this is going really well!", "I appreciate your positivity."}
+			{"Glad to hear that you are feeling positive.","You seem to be in a good mood!", "You're annoyingly chipper.", "Wow you're a cheerful one.", "I think this is going really well!", "I appreciate your positivity."},
 			//Negative sentiment responses
 			{"I am sorry it seems that you are a bit negative.","Well aren't you just a regular bowl of sunshine.","Are you having a bad day?","You seem to be upset.","Did I say something to offend you?","You're not a very pleasant person to converse with."}
 
@@ -240,11 +240,11 @@ public class Window extends JFrame implements KeyListener{
 		List<String> namedEntities = getNameEntityList(s);
 		addText("\n-->Elon:\t");
 		if(Sentiment==1) {
-			addText(Responses[11][(int)(Math.random()*6)]+"\n");
+			addText(Responses[10][(int)(Math.random()*6)]+"\n");
 			Sentiment=0;
 			addText("\n-->Elon:\t");
 		}else if(Sentiment==-1) {
-			addText(Responses[12][(int)(Math.random()*6)]+"\n");
+			addText(Responses[11][(int)(Math.random()*6)]+"\n");
 			Sentiment=0;
 			addText("\n-->Elon:\t");
 		}
