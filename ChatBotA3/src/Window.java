@@ -90,9 +90,25 @@ public class Window extends JFrame implements KeyListener{
 			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man doesn't?", "Maybe"},
 			
 			//Bezos rivalry
-			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space.",
-				"Like him? We have a bit of a rivalry going you know, so things can be a little tense between us I'd say."}
+			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space. That meeting didn't go \n\tso well",
+				"Like him? We have a bit of a rivalry going you know, so things can be a little tense between us I'd say.",
+				"To be honest, I think he is running a monoply and he is a copycat for his self-driving car interests.",
+				"Yeah, him and I are not on the greatest terms, and our spaceflight companies are always competing, so I \n\twould say we are rivals.",
+				"We have been rivals ever since a bad meeting in 2004, and it's only grown from there.",
+				"We have had some disgreements over the years and our spaceflight companies have butted heads a few times \n\tbecause they are always competing. Aside from our general disagreements and competing companies, there \n\tare a some notable events that contributed to our rivalry: a bad meeting in 2004, a disagreement between \n\tour companies in 2013, a patent battle between our companies in 2014. If you'd like me to elaborate on any \n\tof those events just ask me 'what happened between you and Jeff Bezos in (insert year).' I also disagree \n\twith his spaceflight company's hiring practices. On a lighter note, we also enjoy jabbing at each other on \n\tTwitter in recent years.",
+				"In 2004, Jeff and I had a meeting that did not go well. We disagreed about our reusable rocket ideas that \n\twe were developing for our spaceflight companies.",
+				"In 2013, we had a disagreement about my company, SpaceX, having exclusive use of a NASA launchpad that \n\tJeff thought should be open to all launch companies, including his company, Blue Origin. It was a phony \n\tblocking tactic. Blue origin had not created a reliable suborbital spacecraft that needed launching at that \n\tpoint.",
+				"In 2014, our companies got into a patent battle in 2014 over Blue Origin being granted a patent for drone \n\tships used for landing rocket boosters, which my company and I contested with the support of a judge, so \n\tBlue Origin withdrew most of their claims."}
 
+			//0   Have you met Jeff Bezos? Do you know Jeff Bezos?
+			//1   Do you like Jeff Bezos?
+			//2   What do you think of Jeff Bezos?
+			//3   Do you have a rivalry with Jeff Bezos? Are you and Jeff Bezos rivals? Is Jeff Bezos your rival?
+			//4   How long have you been rivals with Jeff Bezos?
+			//5   Why are you and Jeff Bezos rivals?
+			//6   What happened between you and Jeff Bezos in 2004?	
+			//7   What happened between you and Jeff Bezos in 2013?	
+			//8   What happened between you and Jeff Bezos in 2014?		. 
 	};
 
 	//Constructor to create the window
@@ -210,9 +226,15 @@ public class Window extends JFrame implements KeyListener{
 		int r,c;
 		//String initMsg = assist(s);
 		String initMsg = s;
+		
+		//trim the end of whitespaces
+		initMsg=initMsg.trim();
+		
+		//Replaces "?" with "." for spliting purposes
 		initMsg = initMsg.replace('.', (char)62);
 		initMsg = initMsg.replace('?', (char)62);
-
+		
+		
 		List<String> sentences = Arrays.asList(initMsg.split(">"));
 		
 		
@@ -222,8 +244,8 @@ public class Window extends JFrame implements KeyListener{
 			// Replace all punctuation so it doesn't interfere with responses
 			msg = msg.replace(',', (char)32);
 			
-			//trim the end of whitespaces
 			msg=msg.trim();
+			
 			//make a list of every word in the message
 			List<String> sent = Arrays.asList(msg.split(" "));
 			//A string list of all the named entities detected by corenlp
@@ -402,18 +424,57 @@ public class Window extends JFrame implements KeyListener{
 			
 			//----------------------------------------------------Bezos Rivalry----------------------------------------------------------//
 			
-			else if(sent.contains("know")&&namedEntities.contains("jeff bezos")) {
+			else if((sent.contains("know")||sent.contains("met"))&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 0;
 			}
-			
 			else if(sent.contains("like")&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 1;
 			}
+			else if(sent.contains("think")&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 2;
+			}
+			else if((sent.contains("do")||(sent.contains("are")&&!sent.contains("why"))||sent.contains("is"))&&(sent.contains("rivalry")||sent.contains("rival")||sent.contains("rivals"))&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 3;
+			}
+			else if(sent.contains("rivals")&&sent.contains("long")&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 4;
+			}
+			else if(sent.contains("why")&&sent.contains("rivals")&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 5;
+			}
+			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2004")&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 6;
+			}
+			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2013")&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 7;
+			}
+			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2014")&&namedEntities.contains("jeff bezos")) {
+				r = 10;
+				c = 8;
+			}
+			
+			//0   Have you met Jeff Bezos? Do you know Jeff Bezos?
+			//1   Do you like Jeff Bezos?
+			//2   What do you think of Jeff Bezos?
+			//3   Do you have a rivalry with Jeff Bezos? Are you and Jeff Bezos Rivals? Is Jeff Bezos your rival?
+			//4   How long have you been rivals with Jeff Bezos?
+			//5   Why are you and Jeff Bezos rivals?
+			//6   What happened between you and Jeff Bezos in 2004?	
+			//7   What happened between you and Jeff Bezos in 2013?	
+			//8   What happened between you and Jeff Bezos in 2014?	
+
 			
 			
-			//Ask Elon about places he has been
+			//----------------------------------------------------Ask Elon about places he has been----------------------------------------------------------//
+
 			else if(sent.contains("have")&&sent.contains("you")&&sent.contains("been")&&sent.contains("to")) {
 				// namedEntities will be empty if an recognized location is entered by corenlp
 				if(!namedEntities.isEmpty()) {
