@@ -225,11 +225,12 @@ public class Window extends JFrame implements KeyListener{
 			c=0;
 			
 			//Saying Hi i'm [name], gives this response. Likely the name is the first entity in the sentence if done correctly, so elon will repeat your name back.
-			if(sent.contains("im")||sent.contains("i'm")||(sent.contains("i")&&sent.contains("am"))||(sent.contains("my")&&sent.contains("name"))&&!namedEntities.isEmpty()){
+			if (sent.contains("im") || sent.contains("i'm") || (sent.contains("i") && sent.contains("am"))
+					|| (sent.contains("my") && sent.contains("name")) && !namedEntities.isEmpty()) {
 				String name = namedEntities.get(0);
-				//makes the first letter capital
-				name = name.substring(0,1).toUpperCase() + name.substring(1);
-				//response
+				// makes the first letter capital
+				name = name.substring(0, 1).toUpperCase() + name.substring(1);
+				// response
 				addText("Nice to meet you " + name + ". You have a nice name.\n");
 				addText("\n-->Elon:\t");
 			}
@@ -401,6 +402,7 @@ public class Window extends JFrame implements KeyListener{
 			else {
 				addText("Been to where?\n");
 				addText("\n-->Elon:\t");
+				question = false;
 			}
 			
 		    r = 9;
@@ -462,6 +464,8 @@ public class Window extends JFrame implements KeyListener{
 	    public List<String> getNameEntityList(String s){
 	    	
 	    	List<String> list = new ArrayList();
+	    	
+	    	if(s!="")  {
             //document for corenlp
 		    CoreDocument document = new CoreDocument(s);
 		    // annnotate the document
@@ -474,7 +478,8 @@ public class Window extends JFrame implements KeyListener{
 			for(int i = 0; i<entityMentions.size();i++) {
 				list.add(entityMentions.get(i).toString().toLowerCase());
 			}
-	
+	    	
+	    	}
 	    	
 	    	return list;
 	    	
