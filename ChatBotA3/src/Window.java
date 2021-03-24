@@ -33,7 +33,6 @@ import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.semgraph.*;
 import edu.stanford.nlp.trees.*;
 
-
 public class Window extends JFrame implements KeyListener{
 	//Here we make a window that will contain our text area box and the input box at the bottom as well as a scroll bar the shows up when needed
 	JPanel pane= new JPanel();
@@ -69,7 +68,7 @@ public class Window extends JFrame implements KeyListener{
 			//Goodbye
 			{"It was a pleasure to talk to you","Have a great day","See you later","Goodbye", "We must colonize Mars!"},
 			//Career Facts
-			{"My first company was Zip2,which eventually sold to Compaq for $307 million.",
+			{"My first company was Zip2, which eventually sold to Compaq for $307 million.",
 				"I am the founder of Space Exploration technologies, better known as SpaceX",
 				"In 2008 I took over as CEO of Tesla.",
 				"I was the cofounder of X.com, which later merged with confinity to form paypal and was then \n\tsold to ebay for $1.5 Billion!",
@@ -576,22 +575,16 @@ public class Window extends JFrame implements KeyListener{
 		if(question&&r!=2&&((int)Math.round(Math.random()*4))==4) {
 			addText("That's a great question!\n");
 			addText("\n-->Elon:\t");
-    }
-		String response = Responses[r][c]+"\n";
-		//add the response to the text Area
-		addText(response);	
 		
 		//again checking if it was q and making a visible message saying the chat has ended across window
 		if(sent.contains("q"))
 			addText("--------------------------------------------Chat Has Ended--------------------------------------------");
-		
 		return response;
 		
 		//Changed length from the og below. Fixed bug where the window moves out of frame on the x axis when q is pressed. 
 		//addText("-------------------------------------------------------------------------------------Chat Has Ended------------------------------------------------------------------------------------");
 
 	}	 
-
 	    
 	    public int analyse(String txt) {
 	    	//document for corenlp
