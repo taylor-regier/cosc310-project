@@ -54,7 +54,13 @@ public class Window extends JFrame implements KeyListener{
 			//Thank you
 			{"You're welcome"},
 			//Default
-			{"Sorry I did not understand that. I may not have enough updates to understand what you \n\twere asking"},
+			{"Sorry, I didn't understand that. I may not have enough updates to understand what you \n\twere asking.", 
+			 	"Hmm... I'm not sure what you're asking me.", 
+			 	"Sorry, could you rephrase the question?  I didn't understand that.", 
+			 	"A ridiculous question like that doesn't deserve a response.", 
+			 	"I wish I knew how to answer that.", 
+			 	"I'm afraid I don't know what to say. Can you ask me something else?", 
+			 	"Well I'm speechless. Ask me something else."},
 			//Goodbye
 			{"It was a pleasure to talk to you","Have a great day","See you later","Goodbye", "We must colonize Mars!"},
 			//Career Facts
@@ -432,7 +438,7 @@ public class Window extends JFrame implements KeyListener{
 		//default case
 		else {
 			r=2;
-			c=0;
+			c=(int)(Math.random()*7);
 		}
 		
 	    // If the msg received was a question and the response is not default. There is a 1/5 chance bot responds this.
