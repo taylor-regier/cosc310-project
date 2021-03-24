@@ -214,8 +214,8 @@ public class Window extends JFrame implements KeyListener{
 	//The method that will get the bots response
 	public void response(String s, Boolean question) {
 		int r,c;
-		//String initMsg = assist(s);
-		String initMsg = s;
+		String initMsg = assist(s);
+		//String initMsg = s;
 
 		//trim the end of whitespaces
 		initMsg=initMsg.trim();
