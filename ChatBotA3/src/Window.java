@@ -72,8 +72,8 @@ public class Window extends JFrame implements KeyListener{
 			"My favourite airplane is the SR-71 Blackbird. The A-XII in X AE A-XII is the predecessor to\n\tthis plane." },
 			//Life Facts
 			{"I was born in Pretoria, South Africa.", "June 28 1971.","Thank you for asking. I'm 49 now and will be 50 this year.", 
-				"My parents were Maye who was my mother and Errol who was my father. I am not very fond\n\tof my father."," I have two siblings. Tosca who is my sister and Kimbal who is my brother",
-				"I started university in Pretoria, which I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
+				"My mother was Maye and my father was Errol. I am not very fond\n\tof my father."," I have two siblings, my sister Tosca and my brother Kimball",
+				"I started university in Pretoria, and I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
 				"I have had two wives but those ended in divorce. I am currently am dating the musician Grimes",
 				"My first wife's name was Justine Wilson and we were married from 2000-2008. We had 5 \n\tchildren. One of our kids Nevada unfortunately passed away due to sudden infant death syndrome.",
 				"My second wife's name was Talula Riley and we were married from 2010-2016.",
@@ -82,13 +82,13 @@ public class Window extends JFrame implements KeyListener{
 				"I taught myself to code when I was around 10 years old.",
 				"I mainly spend my time between SpaceX and Tesla, and I'm heavily involved with the engineering decisions\n\tat those companies. I also spend a lot of my time at OpenAI too.",
 				"I own a lot of cars, but mainly drive my Model S. Though I only drive Teslas now, I've owned a \n\t1978 BMW 320i and a 1967 Jaguar (E-type).",
-				"She is from Canada originally. She was born and raised in Vancouver."},
+			"She is from Canada originally. She was born and raised in Vancouver."},
 			//Appearances/Interviews
 			{ "I had a cameo in The Simpsons, The Big Bang theory, South Park, and Rick and Morty. Maybe\n\tyou've seen one of my episodes?",
 			"Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..."},
-			
+
 			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man doesn't?", "Maybe"},
-			
+
 			//Bezos rivalry
 			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space. That meeting didn't go \n\tso well",
 				"Like him? We have a bit of a rivalry going you know, so things can be a little tense between us I'd say.",
@@ -98,17 +98,8 @@ public class Window extends JFrame implements KeyListener{
 				"We have had some disgreements over the years and our spaceflight companies have butted heads a few times \n\tbecause they are always competing. Aside from our general disagreements and competing companies, there \n\tare a some notable events that contributed to our rivalry: a bad meeting in 2004, a disagreement between \n\tour companies in 2013, a patent battle between our companies in 2014. If you'd like me to elaborate on any \n\tof those events just ask me 'what happened between you and Jeff Bezos in (insert year).' I also disagree \n\twith his spaceflight company's hiring practices. On a lighter note, we also enjoy jabbing at each other on \n\tTwitter in recent years.",
 				"In 2004, Jeff and I had a meeting that did not go well. We disagreed about our reusable rocket ideas that \n\twe were developing for our spaceflight companies.",
 				"In 2013, we had a disagreement about my company, SpaceX, having exclusive use of a NASA launchpad that \n\tJeff thought should be open to all launch companies, including his company, Blue Origin. It was a phony \n\tblocking tactic. Blue origin had not created a reliable suborbital spacecraft that needed launching at that \n\tpoint.",
-				"In 2014, our companies got into a patent battle in 2014 over Blue Origin being granted a patent for drone \n\tships used for landing rocket boosters, which my company and I contested with the support of a judge, so \n\tBlue Origin withdrew most of their claims."}
-
-			//0   Have you met Jeff Bezos? Do you know Jeff Bezos?
-			//1   Do you like Jeff Bezos?
-			//2   What do you think of Jeff Bezos?
-			//3   Do you have a rivalry with Jeff Bezos? Are you and Jeff Bezos rivals? Is Jeff Bezos your rival?
-			//4   How long have you been rivals with Jeff Bezos?
-			//5   Why are you and Jeff Bezos rivals?
-			//6   What happened between you and Jeff Bezos in 2004?	
-			//7   What happened between you and Jeff Bezos in 2013?	
-			//8   What happened between you and Jeff Bezos in 2014?		. 
+				"In 2014, our companies got into a patent battle in 2014 over Blue Origin being granted a patent for drone \n\tships used for landing rocket boosters, which my company and I contested with the support of a judge, so \n\tBlue Origin withdrew most of their claims.",
+			"I disagree with their hiring practices, and as I have said before, their rate of progress is too slow and the \n\tamount of years Jeff Bezos has left is not enough, but I'm still glad he's doing what he's doing with \n\tBlue Origin"}
 	};
 
 	//Constructor to create the window
@@ -125,7 +116,6 @@ public class Window extends JFrame implements KeyListener{
 		//For our window we need to add our scrollbar and our input text box
 		pane.add(sideBar);
 		pane.add(input);
-
 
 
 		//Core NLP stuff taken directly from their website.
@@ -219,33 +209,35 @@ public class Window extends JFrame implements KeyListener{
 			Thread.currentThread().interrupt();
 		}
 	}
-	
+
 
 	//The method that will get the bots response
 	public void response(String s, Boolean question) {
 		int r,c;
 		//String initMsg = assist(s);
 		String initMsg = s;
-		
+
 		//trim the end of whitespaces
 		initMsg=initMsg.trim();
-		
-		//Replaces "?" with "." for spliting purposes
+
+		//Replaces "?" and "." with ">" for splitting purposes
 		initMsg = initMsg.replace('.', (char)62);
 		initMsg = initMsg.replace('?', (char)62);
-		
-		
+
+		//splits the message at the end of every sentence
 		List<String> sentences = Arrays.asList(initMsg.split(">"));
-		
-		
+
+		//for loop for running every sentence separately so that the bot can understand 
+		//every sentence sent in as separate statements opposed to as one large statement. 
+		//this also allows us to properly demonstrate coreference resolution 
 		for (int i=0; i < sentences.size(); i++) {
 			//Make msg lower case so that s is intact and case doesn't matter for sent
-			 String msg = sentences.get(i).toLowerCase();
+			String msg = sentences.get(i).toLowerCase();
 			// Replace all punctuation so it doesn't interfere with responses
 			msg = msg.replace(',', (char)32);
-			
+			//Redundant trimming just in case
 			msg=msg.trim();
-			
+
 			//make a list of every word in the message
 			List<String> sent = Arrays.asList(msg.split(" "));
 			//A string list of all the named entities detected by corenlp
@@ -421,58 +413,69 @@ public class Window extends JFrame implements KeyListener{
 				r = 4;
 				c = 7;
 			}
-			
+
 			//----------------------------------------------------Bezos Rivalry----------------------------------------------------------//
-			
+
+			//0   Have you met Jeff Bezos? Do you know Jeff Bezos?
 			else if((sent.contains("know")||sent.contains("met"))&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 0;
 			}
+
+			//1   Do you like Jeff Bezos?
 			else if(sent.contains("like")&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 1;
 			}
+
+			//2   What do you think of Jeff Bezos?
 			else if(sent.contains("think")&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 2;
 			}
+
+			//3   Do you have a rivalry with Jeff Bezos? Are you and Jeff Bezos Rivals? Is Jeff Bezos your rival?
 			else if((sent.contains("do")||(sent.contains("are")&&!sent.contains("why"))||sent.contains("is"))&&(sent.contains("rivalry")||sent.contains("rival")||sent.contains("rivals"))&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 3;
 			}
+
+			//4   How long have you been rivals with Jeff Bezos?
 			else if(sent.contains("rivals")&&sent.contains("long")&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 4;
 			}
+
+			//5   Why are you and Jeff Bezos rivals?
 			else if(sent.contains("why")&&sent.contains("rivals")&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 5;
 			}
+
+			//6   What happened between you and Jeff Bezos in 2004?
 			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2004")&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 6;
 			}
+
+			//7   What happened between you and Jeff Bezos in 2013?
 			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2013")&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 7;
 			}
+
+			//8   What happened between you and Jeff Bezos in 2014?
 			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2014")&&namedEntities.contains("jeff bezos")) {
 				r = 10;
 				c = 8;
 			}
 			
-			//0   Have you met Jeff Bezos? Do you know Jeff Bezos?
-			//1   Do you like Jeff Bezos?
-			//2   What do you think of Jeff Bezos?
-			//3   Do you have a rivalry with Jeff Bezos? Are you and Jeff Bezos Rivals? Is Jeff Bezos your rival?
-			//4   How long have you been rivals with Jeff Bezos?
-			//5   Why are you and Jeff Bezos rivals?
-			//6   What happened between you and Jeff Bezos in 2004?	
-			//7   What happened between you and Jeff Bezos in 2013?	
-			//8   What happened between you and Jeff Bezos in 2014?	
+			//9   What do you think of Blue Origin
+			else if(sent.contains("think")&&sent.contains("blue")&&sent.contains("origin")) {
+				r = 10;
+				c = 9;
+			}
 
-			
-			
 			//----------------------------------------------------Ask Elon about places he has been----------------------------------------------------------//
 
 			else if(sent.contains("have")&&sent.contains("you")&&sent.contains("been")&&sent.contains("to")) {
@@ -545,75 +548,75 @@ public class Window extends JFrame implements KeyListener{
 
 
 	//Get a list of namedEntitys from the string and then convert those named entities to strings in a new list
-	    public List<String> getNameEntityList(String s){
-	    	
-	    	List<String> list = new ArrayList();
-            //document for corenlp
-		    CoreDocument document = new CoreDocument(s);
-		    // annnotate the document
-		    pipeline.getPipe().annotate(document);
-		    // get entities from the document
-			List<CoreEntityMention> entityMentions = document.entityMentions();
-			//print entities
-			System.out.println(entityMentions.toString());
-			//Convert entities to their string representations and add to the list
-			for(int i = 0; i<entityMentions.size();i++) {
-				list.add(entityMentions.get(i).toString().toLowerCase());
-			}
-	
-	    	
-	    	return list;
-	    	
-	    }
-	    
-	    public static String assist(String s) {
-			String res = s;
-			List<Object[]> list =  CoRef(s);
-			for(int i = 0; i < list.size();i++)
-				res = replace(res, list.get(i));
-			return res;
-		}
-		 //coreference resolution
-	    /*********************
-	     * Determines the coreferences for the sentence, then puts them into an array with
-	     * equvalent words, all equivalent words are in the same array. If multiple 
-	     * equivalences exist will return a list of arrays
-	     * @param sentence that will be solved
-	     * @return list of equivalant words
-	     */
-		public static List<Object[]> CoRef(String s) {
-				Pipeline p = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,coref","","");
-				List<Object[]> list = new ArrayList<Object[]>();
-			    Annotation document = new Annotation(s);
-			    p.getPipe().annotate(document);
-			    for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
-			      list.add(extract(cc.getMentionMap().values().toArray()));		   
-			    }
-			 return list;
+	public List<String> getNameEntityList(String s){
+
+		List<String> list = new ArrayList();
+		//document for corenlp
+		CoreDocument document = new CoreDocument(s);
+		// annnotate the document
+		pipeline.getPipe().annotate(document);
+		// get entities from the document
+		List<CoreEntityMention> entityMentions = document.entityMentions();
+		//print entities
+		System.out.println(entityMentions.toString());
+		//Convert entities to their string representations and add to the list
+		for(int i = 0; i<entityMentions.size();i++) {
+			list.add(entityMentions.get(i).toString().toLowerCase());
 		}
 
-		public static Object[] extract(Object[] A) {
-			for (int i = 0;i < A.length;i++)
-				A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
-			return A;
+
+		return list;
+
+	}
+
+	public static String assist(String s) {
+		String res = s;
+		List<Object[]> list =  CoRef(s);
+		for(int i = 0; i < list.size();i++)
+			res = replace(res, list.get(i));
+		return res;
+	}
+	//coreference resolution
+	/*********************
+	 * Determines the coreferences for the sentence, then puts them into an array with
+	 * equvalent words, all equivalent words are in the same array. If multiple 
+	 * equivalences exist will return a list of arrays
+	 * @param sentence that will be solved
+	 * @return list of equivalant words
+	 */
+	public static List<Object[]> CoRef(String s) {
+		Pipeline p = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,coref","","");
+		List<Object[]> list = new ArrayList<Object[]>();
+		Annotation document = new Annotation(s);
+		p.getPipe().annotate(document);
+		for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
+			list.add(extract(cc.getMentionMap().values().toArray()));		   
 		}
-		
-	
-		/****************
-		 * Takes in A string s then takes the first item in equivalence list, then replaces all appearances of the 
-		 * following strings in the list, with the first item in the list. 
-		 * NOTE: MUST CAST
-		 * OBJECT[] WHEN CALLING METHOD.
-		 * @param Sentence that is to be updated
-		 * @param Equivalence matrix, that determines what is to be replaced, and by what
-		 * @return The updated sentence.
-		 */
-		public static String replace(String s,Object[] replace) {
-			String replacer = replace[0].toString();//value that is going to replace next
-			for(int i = 1; i < replace.length;i++) {
-				if(s.contains(replace[i].toString()))
-					s=s.replace(replace[i].toString(), replacer);
-			}
-			return s;
+		return list;
+	}
+
+	public static Object[] extract(Object[] A) {
+		for (int i = 0;i < A.length;i++)
+			A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
+		return A;
+	}
+
+
+	/****************
+	 * Takes in A string s then takes the first item in equivalence list, then replaces all appearances of the 
+	 * following strings in the list, with the first item in the list. 
+	 * NOTE: MUST CAST
+	 * OBJECT[] WHEN CALLING METHOD.
+	 * @param Sentence that is to be updated
+	 * @param Equivalence matrix, that determines what is to be replaced, and by what
+	 * @return The updated sentence.
+	 */
+	public static String replace(String s,Object[] replace) {
+		String replacer = replace[0].toString();//value that is going to replace next
+		for(int i = 1; i < replace.length;i++) {
+			if(s.contains(replace[i].toString()))
+				s=s.replace(replace[i].toString(), replacer);
 		}
+		return s;
+	}
 }
