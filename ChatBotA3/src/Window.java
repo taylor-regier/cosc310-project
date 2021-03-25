@@ -702,9 +702,8 @@ public class Window extends JFrame implements KeyListener{
 	}
 
 	public static Object[] extract(Object[] A) {
-		Object[] temp = new Object[A.length];
 		for (int i = 0;i < A.length;i++) {
-			temp[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
+			A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
 		}
 			return A;
 	}
