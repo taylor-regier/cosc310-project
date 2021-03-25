@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -15,6 +16,8 @@ public class WindowTest {
 		//Initialize the window before all other methods so we can use it
 		try {
 		window = new Window();
+		List<Object[]> temp = window.CoRef("");
+
 		}
 		catch(Exception e){
 			//If there is an error when creating the window for any reason the test fails
@@ -210,7 +213,49 @@ public class WindowTest {
 				window.response("Joe Rogan", false));
    
 	}
+	// Tests the functionality of the Coreference resolution function
+	@Test
+	public void testCoref() {
+		try {
+			// test 1
+			List<Object[]> a = window.CoRef("Bob is cool. Be like him.");
+			assertNotNull(a);
+			assertEquals(a.get(0)[0].toString(),"Bob");
+			assertEquals(a.get(0)[1].toString(),"him");
+			//test 2
+			a = window.CoRef("I think Jane is smart. Dont be like her.");
+			assertNotNull(a);
+			assertEquals(a.get(0)[0].toString(),"Jane");
+			assertEquals(a.get(0)[1].toString(),"her");
+			//test 3
+			a = window.CoRef("Jane is cool. Bob is smart. be like like him and her.");
+			assertNotNull(a);
+			assertEquals(a.get(0)[0].toString(),"Jane");
+			assertEquals(a.get(0)[1].toString(),"her");
+			assertEquals(a.get(1)[0].toString(),"Bob");
+			assertEquals(a.get(1)[1].toString(),"him");
+			}catch(Exception e) {
+				fail(e.toString());
+		}
+	}
 
+	//tests the functionality of the replace function
+	@Test
+	public void testReplace() {
+		//test 1
+		Object[] b = {"Bob","him"};
+		String a = window.replace("Bob is cool. Be like him.",b);
+		assertEquals("Bob is cool. Be like Bob.",a);
+		//test 2
+		Object[] c= {"Jeff Bezos","him"};
+		a = window.replace("Do you know Jeff Bezos. Do you like him?",c);
+		assertEquals("Do you know Jeff Bezos. Do you like Jeff Bezos?",a);
+		//test 3
+		Object[] d = {"Grimes","she"};
+		a = window.replace("Are you dating Grimes. Where was she born.",d);
+		assertEquals("Are you dating Grimes. Where was Grimes born.",a);
+	}
+ 
 	@Test
 	public void testGetNameEntityList() {
 		

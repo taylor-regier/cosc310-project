@@ -702,11 +702,12 @@ public class Window extends JFrame implements KeyListener{
 	}
 
 	public static Object[] extract(Object[] A) {
-		for (int i = 0;i < A.length;i++)
-			A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
-		return A;
+		Object[] temp = new Object[A.length];
+		for (int i = 0;i < A.length;i++) {
+			temp[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
+		}
+			return A;
 	}
-
 
 	/****************
 	 * Takes in A string s then takes the first item in equivalence list, then replaces all appearances of the 
@@ -723,6 +724,7 @@ public class Window extends JFrame implements KeyListener{
 			if(s.contains(replace[i].toString()))
 				s=s.replace(replace[i].toString(), replacer);
 		}
+		System.out.println(s);
 		return s;
 	}
 }
