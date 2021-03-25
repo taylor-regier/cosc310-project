@@ -655,6 +655,8 @@ public class Window extends JFrame implements KeyListener{
 	public List<String> getNameEntityList(String s){
 
 		List<String> list = new ArrayList();
+		
+	    if(s!="") {
 		//document for corenlp
 		CoreDocument document = new CoreDocument(s);
 		// annnotate the document
@@ -668,7 +670,7 @@ public class Window extends JFrame implements KeyListener{
 			list.add(entityMentions.get(i).toString().toLowerCase());
 		}
 
-
+	    }
 		return list;
 
 	}

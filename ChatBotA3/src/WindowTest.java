@@ -23,28 +23,6 @@ public class WindowTest {
 	}
 
 
-
-	@Test
-	public void testKeyTyped() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testKeyPressed() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testKeyReleased() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testAddText() {
-		fail("Not yet implemented");
-
-	}
-
 	@Test
 	public void testResponse() {
 		// Tests for all core coded responses
