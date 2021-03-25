@@ -55,9 +55,15 @@ public class WindowTest {
 		assertEquals("I'm very good, thank you.", window.response("How are you?", false));
 
 		// Default
-		assertEquals(
-				"Sorry I did not understand that. I may not have enough updates to understand what you \n\twere asking",
-				window.response("Blam", false));
+		String response = window.response("blam", false);
+		assertTrue(response.equals(
+				"Sorry, I didn't understand that. I may not have enough updates to understand what you \n\twere asking.")
+				|| response.equals("Hmm... I'm not sure what you're asking me.")
+				|| response.equals("Sorry, could you rephrase the question?  I didn't understand that.")
+				|| response.equals("A ridiculous question like that doesn't deserve a response.")
+				|| response.equals("I wish I knew how to answer that.")
+				|| response.equals("I'm afraid I don't know what to say. Can you ask me something else?")
+				|| response.equals("Well I'm speechless. Ask me something else."));
 
 		// Thank you
 		assertEquals("You're welcome", window.response("Thank you", false));
@@ -93,7 +99,7 @@ public class WindowTest {
 		assertEquals("The main companies I have been involved in are: Zip2,SpaceX,Tesla,OpenAI,Neuralink and SolarCity",
 				window.response("What companies", false));
 
-		String response = window.response("Favourite thing?", false);
+		response = window.response("Favourite thing?", false);
 
 		// General Interests
 		assertTrue(response.equals("I'm a big fan of dogecoin, and all forms of cryptocurrency!")
@@ -140,19 +146,19 @@ public class WindowTest {
 		assertEquals("Thank you for asking. I'm 49 now and will be 50 this year.",
 				window.response("What is your age", false));
 		assertEquals(
-				"My parents were Maye who was my mother and Errol who was my father. I am not very fond\n\tof my father.",
+				"My mother was Maye and my father was Errol. I am not very fond\n\tof my father.",
 				window.response("Who are your parents", false));
-		assertEquals("I have two siblings. Tosca who is my sister and Kimbal who is my brother",
+		assertEquals("I have two siblings, my sister Tosca and my brother Kimball",
 				window.response("siblings", false));
-		assertEquals("I have two siblings. Tosca who is my sister and Kimbal who is my brother",
+		assertEquals("I have two siblings, my sister Tosca and my brother Kimball",
 				window.response("brother", false));
-		assertEquals("I have two siblings. Tosca who is my sister and Kimbal who is my brother",
+		assertEquals("I have two siblings, my sister Tosca and my brother Kimball",
 				window.response("sister", false));
 		assertEquals(
-				"I started university in Pretoria, which I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
+				"I started university in Pretoria, and I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
 				window.response("education", false));
 		assertEquals(
-				"I started university in Pretoria, which I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
+				"I started university in Pretoria, and I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
 				window.response("school", false));
 		assertEquals(
 				"My first wife's name was Justine Wilson and we were married from 2000-2008. We had 5 \n\tchildren. One of our kids Nevada unfortunately passed away due to sudden infant death syndrome.",
