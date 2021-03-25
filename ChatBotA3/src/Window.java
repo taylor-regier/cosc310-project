@@ -606,13 +606,11 @@ public class Window extends JFrame implements KeyListener{
 	    	//go through each sentence and get the sentiment
 	    	for(CoreSentence sentence: sentences) {
 	    		String sentiment = sentence.sentiment();
-	    		if(sentiment.equalsIgnoreCase("Positive")) {
+	    		if(sentiment.equalsIgnoreCase("Positive")||sentiment.equalsIgnoreCase("Very Positive")) {
 	    			temp=1;
-	    			Sentiment++;
 	    		}
-	    		else if(sentiment.equalsIgnoreCase("Negative")) {
+	    		else if(sentiment.equalsIgnoreCase("Negative")||sentiment.equalsIgnoreCase("Very Negative")) {
 	    			temp=-1;
-	    			Sentiment--;
 	    		}
 	    		else
 	    			temp=0;
