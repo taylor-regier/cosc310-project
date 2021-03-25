@@ -15,6 +15,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -106,8 +107,8 @@ public class Window extends JFrame implements KeyListener{
 			//Negative sentiment responses
 			{"I am sorry it seems that you are a bit negative.","Well aren't you just a regular bowl of sunshine.","Are you having a bad day?","You seem to be upset.","Did I say something to offend you?","You're not a very pleasant person to converse with."},
 			//Bezos rivalry
-			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space. That meeting didn't go \n\tso well",
-				"Like him? We have a bit of a rivalry going you know, so things can be a little tense between us I'd say.",
+			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space. \n\tThat meeting didn't go \n\tso well",
+				"Like him? We have a bit of a rivalry going you know, so things can be a little tense\n\t between us I'd say.",
 				"To be honest, I do not like that his company Amazon has become a monopoly, and I also think he is a \n\tcopycat for his self-driving car interests.",
 				"Yeah, him and I are not on the greatest terms, and our spaceflight companies are always competing, so I \n\twould say we are rivals.",
 				"We have been rivals ever since a bad meeting in 2004, and it's only grown from there.",
@@ -257,7 +258,7 @@ public class Window extends JFrame implements KeyListener{
 			//make a list of every word in the message
 			List<String> sent = Arrays.asList(msg.split(" "));
 			//A string list of all the named entities detected by corenlp
-			List<String> namedEntities = getNameEntityList(s);
+			List<String> namedEntities = getNameEntityList(msg);
 			addText("\n-->Elon:\t");
 			
 			if(Sentiment==1) {
@@ -447,62 +448,62 @@ public class Window extends JFrame implements KeyListener{
 			//----------------------------------------------------Bezos Rivalry----------------------------------------------------------//
 
 			//0   Have you met Jeff Bezos? Do you know Jeff Bezos?
-			else if((sent.contains("know")||sent.contains("met"))&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if((sent.contains("know")||sent.contains("met"))&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 0;
 			}
 
 			//1   Do you like Jeff Bezos?
-			else if(sent.contains("like")&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if(sent.contains("like")&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 1;
 			}
 
 			//2   What do you think of Jeff Bezos?
-			else if(sent.contains("think")&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if(sent.contains("think")&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 2;
 			}
 
 			//3   Do you have a rivalry with Jeff Bezos? Are you and Jeff Bezos Rivals? Is Jeff Bezos your rival?
-			else if((sent.contains("do")||(sent.contains("are")&&!sent.contains("why"))||sent.contains("is"))&&(sent.contains("rivalry")||sent.contains("rival")||sent.contains("rivals"))&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if((sent.contains("do")||(sent.contains("are")&&!sent.contains("why"))||sent.contains("is"))&&(sent.contains("rivalry")||sent.contains("rival")||sent.contains("rivals"))&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 3;
 			}
 
 			//4   How long have you been rivals with Jeff Bezos?
-			else if(sent.contains("rivals")&&sent.contains("long")&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if(sent.contains("rivals")&&sent.contains("long")&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 4;
 			}
 
 			//5   Why are you and Jeff Bezos rivals?
-			else if(sent.contains("why")&&sent.contains("rivals")&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if(sent.contains("why")&&sent.contains("rivals")&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 5;
 			}
 
 			//6   What happened between you and Jeff Bezos in 2004?
-			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2004")&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2004")&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 6;
 			}
 
 			//7   What happened between you and Jeff Bezos in 2013?
-			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2013")&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2013")&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 7;
 			}
 
 			//8   What happened between you and Jeff Bezos in 2014?
-			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2014")&&namedEntities.contains("jeff bezos")) {
-				r = 10;
+			else if(sent.contains("what")&&sent.contains("happened")&&sent.contains("2014")&&(namedEntities.contains("jeff bezos")||(sent.contains("jeff")&&sent.contains("bezos")))) {
+				r = 12;
 				c = 8;
 			}
 			
 			//9   What do you think of Blue Origin
 			else if(sent.contains("think")&&sent.contains("blue")&&sent.contains("origin")) {
-				r = 10;
+				r = 12;
 				c = 9;
 			}
 
@@ -695,8 +696,9 @@ public class Window extends JFrame implements KeyListener{
 		List<Object[]> list = new ArrayList<Object[]>();
 		Annotation document = new Annotation(s);
 		p.getPipe().annotate(document);
-		for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values()) {
-			list.add(extract(cc.getMentionMap().values().toArray()));		   
+		for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values() ) {
+			list.add(extract(cc.getMentionMap().values().toArray()));
+ 
 		}
 		return list;
 	}
@@ -723,7 +725,7 @@ public class Window extends JFrame implements KeyListener{
 			if(s.contains(replace[i].toString()))
 				s=s.replace(replace[i].toString(), replacer);
 		}
-		System.out.println(s);
+		
 		return s;
 	}
 }
