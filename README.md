@@ -2,13 +2,13 @@
 ## Updates for Assignment 3
 Since Assignment 2 we have added new features and also enhanced some quality of life features to our chatbot. 
 Additions include:
--We implemented Named Entity Recognition from the Stanford Core NLP toolkit.
--We implemented Corefference Resolution from the Stanford Core NLP toolkit.
--We implemented Sentiment analysis tool from the Stanford Core NLP toolkit.
--We added an extra topic on our agents repertoire being information about Jeff Bezos.
--We added more responses to our bot when a question is out of the scope of our topics.
--We implemented a conversation that can be done through sockets.
--We also implemented testing of various methods from our program
+- We implemented Named Entity Recognition from the Stanford Core NLP toolkit.
+- We implemented Corefference Resolution from the Stanford Core NLP toolkit.
+- We implemented Sentiment analysis tool from the Stanford Core NLP toolkit.
+- We added an extra topic on our agents repertoire being information about Jeff Bezos.
+- We added more responses to our bot when a question is out of the scope of our topics.
+- We implemented a conversation that can be done through sockets.
+- We also implemented testing of various methods from our program
 
 ---------------------------------------
 
