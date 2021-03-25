@@ -20,7 +20,7 @@
 
 ---------------------------------------
 ---------------------------------------
-## Code Documentation
+## Code Documentation (Part of Assignment 2)
 ![image4](https://user-images.githubusercontent.com/75397522/111886188-a06db000-8989-11eb-8a34-b567d3314c41.png)
 
 ***Figure 1:*** Main class:
