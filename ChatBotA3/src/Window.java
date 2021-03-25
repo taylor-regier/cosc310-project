@@ -180,7 +180,6 @@ public class Window extends JFrame implements KeyListener{
 			input.setEditable(false);
 			//put the the sentence in the input text field into a String
 			String msg=input.getText();
-			analyse(msg);
 			//set the input field to empty
 			input.setText("");
 			//Call the method that adds the text to the text are
@@ -230,6 +229,7 @@ public class Window extends JFrame implements KeyListener{
 
 	//The method that will get the bots response
 	public String response(String s, Boolean question) {
+		int Sentiment= analyse(s);
 		int r,c;
 		String initMsg = assist(s);
 		String response = "";
