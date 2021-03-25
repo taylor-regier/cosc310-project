@@ -249,7 +249,10 @@ public class Window extends JFrame implements KeyListener{
 		//this also allows us to properly demonstrate coreference resolution 
 		for (int i=0; i < sentences.size(); i++) {
 			//Make msg lower case so that s is intact and case doesn't matter for sent
-			String msg = sentences.get(i).toLowerCase();
+			String msg = sentences.get(i);
+			//A string list of all the named entities detected by corenlp
+			List<String> namedEntities = getNameEntityList(msg);
+			msg = msg.toLowerCase();
 			// Replace all punctuation so it doesn't interfere with responses
 			msg = msg.replace(',', (char)32);
 			//Redundant trimming just in case
@@ -257,8 +260,6 @@ public class Window extends JFrame implements KeyListener{
 
 			//make a list of every word in the message
 			List<String> sent = Arrays.asList(msg.split(" "));
-			//A string list of all the named entities detected by corenlp
-			List<String> namedEntities = getNameEntityList(msg);
 			addText("\n-->Elon:\t");
 			
 			if(Sentiment==1) {
@@ -420,7 +421,7 @@ public class Window extends JFrame implements KeyListener{
 				c = 2;
 			}
 			//paypal
-			else if(namedEntities.contains("x.com")||sent.contains("confinity")||namedEntities.contains("ebay")||namedEntities.contains("paypal")) {
+			else if((sent.contains("x")&&sent.contains("com"))||sent.contains("confinity")||namedEntities.contains("ebay")||namedEntities.contains("paypal")) {
 				r = 4;
 				c = 3;
 			}
