@@ -86,7 +86,7 @@ public class Window extends JFrame implements KeyListener{
 			"My favourite airplane is the SR-71 Blackbird. The A-XII in X AE A-XII is the predecessor to\n\tthis plane." },
 			//Life Facts
 			{"I was born in Pretoria, South Africa.", "June 28 1971.","Thank you for asking. I'm 49 now and will be 50 this year.", 
-				"My mother was Maye and my father was Errol. I am not very fond\n\tof my father."," I have two siblings, my sister Tosca and my brother Kimball",
+				"My mother was Maye and my father was Errol. I am not very fond\n\tof my father.","I have two siblings, my sister Tosca and my brother Kimball",
 				"I started university in Pretoria, and I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
 				"I have had two wives but those ended in divorce. I am currently am dating the musician Grimes",
 				"My first wife's name was Justine Wilson and we were married from 2000-2008. We had 5 \n\tchildren. One of our kids Nevada unfortunately passed away due to sudden infant death syndrome.",
@@ -337,7 +337,7 @@ public class Window extends JFrame implements KeyListener{
 				r = 7;
 				c = 6;
 			}
-			else if((sent.contains("currently")||sent.contains("dating"))&&namedEntities.contains("grimes")) {
+			else if((sent.contains("currently")||sent.contains("dating"))||namedEntities.contains("grimes")) {
 				r = 7;
 				c = 9;
 			}
@@ -429,7 +429,7 @@ public class Window extends JFrame implements KeyListener{
 				c = 4;
 			}
 			//Neuralink
-			else if(namedEntities.contains("neuralink")) {
+			else if(sent.contains("neuralink")) {
 				r = 4;
 				c = 5;
 			}
@@ -606,13 +606,11 @@ public class Window extends JFrame implements KeyListener{
 	    	//go through each sentence and get the sentiment
 	    	for(CoreSentence sentence: sentences) {
 	    		String sentiment = sentence.sentiment();
-	    		if(sentiment.equalsIgnoreCase("Positive")) {
+	    		if(sentiment.equalsIgnoreCase("Positive")||sentiment.equalsIgnoreCase("Very Positive")) {
 	    			temp=1;
-	    			Sentiment++;
 	    		}
-	    		else if(sentiment.equalsIgnoreCase("Negative")) {
+	    		else if(sentiment.equalsIgnoreCase("Negative")||sentiment.equalsIgnoreCase("Very Negative")) {
 	    			temp=-1;
-	    			Sentiment--;
 	    		}
 	    		else
 	    			temp=0;
@@ -657,6 +655,8 @@ public class Window extends JFrame implements KeyListener{
 	public List<String> getNameEntityList(String s){
 
 		List<String> list = new ArrayList();
+		
+	    if(s!="") {
 		//document for corenlp
 		CoreDocument document = new CoreDocument(s);
 		// annnotate the document
@@ -670,7 +670,7 @@ public class Window extends JFrame implements KeyListener{
 			list.add(entityMentions.get(i).toString().toLowerCase());
 		}
 
-
+	    }
 		return list;
 
 	}
