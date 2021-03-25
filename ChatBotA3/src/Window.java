@@ -655,6 +655,8 @@ public class Window extends JFrame implements KeyListener{
 	public List<String> getNameEntityList(String s){
 
 		List<String> list = new ArrayList();
+		
+	    if(s!="") {
 		//document for corenlp
 		CoreDocument document = new CoreDocument(s);
 		// annnotate the document
@@ -668,7 +670,7 @@ public class Window extends JFrame implements KeyListener{
 			list.add(entityMentions.get(i).toString().toLowerCase());
 		}
 
-
+	    }
 		return list;
 
 	}
@@ -700,11 +702,11 @@ public class Window extends JFrame implements KeyListener{
 	}
 
 	public static Object[] extract(Object[] A) {
-		for (int i = 0;i < A.length;i++)
+		for (int i = 0;i < A.length;i++) {
 			A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
-		return A;
+		}
+			return A;
 	}
-
 
 	/****************
 	 * Takes in A string s then takes the first item in equivalence list, then replaces all appearances of the 
@@ -721,6 +723,7 @@ public class Window extends JFrame implements KeyListener{
 			if(s.contains(replace[i].toString()))
 				s=s.replace(replace[i].toString(), replacer);
 		}
+		System.out.println(s);
 		return s;
 	}
 }
