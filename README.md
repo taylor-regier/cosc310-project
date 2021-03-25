@@ -15,7 +15,7 @@ Additions include:
 ## Purpose
 - The purpose of this project was for COSC 310 "Software Engineering".
 - We created a chatbot that can answer some questions about Elon Musk.
-- We did not use any NLP libraries but we used a chain of if else statements that when a word is recognized from a sentence it will get the appropriate response from a 2D array.
+- We used a chain of if else statements that when a word is recognized from a sentence it will get the appropriate response from a 2D array.
 
 ---------------------------------------
 
