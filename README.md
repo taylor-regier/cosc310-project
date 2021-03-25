@@ -1,5 +1,5 @@
 # Elon Musk Chat Bot
-##Updates for Assignment 3
+## Updates for Assignment 3
 Since Assignment 2 we have added new features and also enhanced some quality of life features to our chatbot. 
 Additions include:
 -We implemented Named Entity Recognition from the Stanford Core NLP toolkit.
