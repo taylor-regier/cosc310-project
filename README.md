@@ -116,9 +116,11 @@ You can ask elon where he has been, listing places. Elon will randomly select a 
 ## Coreference Resolution (*Stanford toolkit*)
 ---------------------------------------
 
+We implemented Coreference resolutiong so we are able to say a name like "Jeff Bezos" then we can later on in another sentece refer to him as a he and our bot will understand it. This limits redundency in our conversation with our bot.
+
 ![image](https://user-images.githubusercontent.com/75397522/112570314-0baced00-8da3-11eb-85fa-f0891707a98e.png)
 
-**Figure 11:*** Sample Chat Output with multiple questions
+***Figure 11:*** Sample Chat Output with multiple questions
 
 ![image](https://user-images.githubusercontent.com/75397522/112570386-2f703300-8da3-11eb-9ae5-d0540cd914eb.png)
 
