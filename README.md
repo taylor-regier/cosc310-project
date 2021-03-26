@@ -23,7 +23,7 @@ Additions include:
 ## Compile And Run
 - To be able to run our code you will need to download the stanford core nlp toolkit and put it in the class path of the project. We had to do this because of limiting space on github.
 - The same goes for Junit testing
-- To compile and run this code clone the repository than you will have a jar file that you can run to open up our application. 
+- To compile and run this code clone the repository then you will have a jar file that you can run to open up our application. 
 
 ---------------------------------------
 
