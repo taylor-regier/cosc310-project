@@ -96,6 +96,8 @@ The main purpose of this method is to split the message string into an array of 
 ## Named Entity Recognition (*Stanford toolkit*)
 ---------------------------------------
 
+We implemented Named Entity Recognition so our chat bot would recognize if we are using a name of someone, which he would then remember and could reply using that name. Or you could give him a list of places and he would be able to recognize them. You can see this from the examples below.
+
 ![namedEntities](https://user-images.githubusercontent.com/75397522/111888896-03694200-899e-11eb-9e77-4725305d9f89.PNG)
 
 
