@@ -114,6 +114,13 @@ You can ask elon where he has been, listing places. Elon will randomly select a 
 ## Coreference Resolution (*Stanford toolkit*)
 ---------------------------------------
 
+![image](https://user-images.githubusercontent.com/75397522/112570314-0baced00-8da3-11eb-85fa-f0891707a98e.png)
+
+**Figure 11:*** Sample Chat Output with multiple questions
+
+![image](https://user-images.githubusercontent.com/75397522/112570386-2f703300-8da3-11eb-9ae5-d0540cd914eb.png)
+
+***Figure 12:*** Sample Chat Output with a Name Then Referencing by He/She/Him/Her
 
 ---------------------------------------
 
@@ -123,7 +130,7 @@ We used Sentiment analysis to see how the user was feeling. Depending on if the 
 
 ![310](https://user-images.githubusercontent.com/75397522/112517084-26f10b80-8d55-11eb-9bae-15dbd5d3ce4d.PNG)
 
-***Figrue __:*** Sample conversation 
+***Figrue 13:*** Sample conversation 
 
 From this sample conversation you can see that Elon detected that the sentence was positive and he gave a response referencing that, then he sent the appropriate response. Below that you can see that the console shows that the sentence was positive, what it sent a variable to, and the sentence it was testing.
 
@@ -135,18 +142,18 @@ To engage a socket conversation you must type in SocketSTUFF (case sensitive) to
 
 ![image](https://user-images.githubusercontent.com/75397522/112515502-8cdc9380-8d53-11eb-9f3e-9c495dd69b8e.png)
 
-***Figure __:*** Sample of Receiving a Connection
+***Figure 14:*** Sample of Receiving a Connection
 
 ![image](https://user-images.githubusercontent.com/75397522/112515676-b5fd2400-8d53-11eb-842c-a849f48aafe2.png)
 
-***Figure __:*** Sample output of a socket conversation
+***Figure 15:*** Sample output of a socket conversation
 
 Client can converse with Elon normally, typing input in the console and receiving Elonbots output. Press q to close communications
 
 ![image](https://user-images.githubusercontent.com/75397522/112515840-e1800e80-8d53-11eb-8a5b-1085ac26f9e3.png)
 
-***Figure __:*** Client Side Socket Code
+***Figure 16:*** Client Side Socket Code
 
 ![image](https://user-images.githubusercontent.com/75397522/112515860-e80e8600-8d53-11eb-98b9-01b70a5f2d8f.png)
 
-***Figure __:*** Server Side Socket Code
+***Figure 17:*** Server Side Socket Code
