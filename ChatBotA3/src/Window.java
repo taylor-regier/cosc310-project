@@ -107,7 +107,7 @@ public class Window extends JFrame implements KeyListener{
 			//Negative sentiment responses
 			{"I am sorry it seems that you are a bit negative.","Well aren't you just a regular bowl of sunshine.","Are you having a bad day?","You seem to be upset.","Did I say something to offend you?","You're not a very pleasant person to converse with."},
 			//Bezos rivalry
-			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space. \n\tThat meeting didn't go \n\tso well",
+			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space. That meeting didn't go \n\tso well",
 				"Like him? We have a bit of a rivalry going you know, so things can be a little tense\n\t between us I'd say.",
 				"To be honest, I do not like that his company Amazon has become a monopoly, and I also think he is a \n\tcopycat for his self-driving car interests.",
 				"Yeah, him and I are not on the greatest terms, and our spaceflight companies are always competing, so I \n\twould say we are rivals.",
@@ -235,11 +235,12 @@ public class Window extends JFrame implements KeyListener{
 		String initMsg = assist(s);
 		String response = "";
 
-		initMsg=initMsg.trim();
+		initMsg=initMsg.trim();	
 
-		//Replaces "?" and "." with ">" for splitting purposes
+		//Replaces "?" and "." and "," with ">" for splitting purposes
 		initMsg = initMsg.replace('.', (char)62);
 		initMsg = initMsg.replace('?', (char)62);
+		initMsg = initMsg.replace(',', (char)62);
 
 		//splits the message at the end of every sentence
 		List<String> sentences = Arrays.asList(initMsg.split(">"));
