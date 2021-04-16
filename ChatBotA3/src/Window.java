@@ -34,6 +34,15 @@ import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.semgraph.*;
 import edu.stanford.nlp.trees.*;
 
+import com.google.cloud.translate.*;
+import com.wolfram.alpha.WAEngine;
+import com.wolfram.alpha.WAException;
+import com.wolfram.alpha.WAPlainText;
+import com.wolfram.alpha.WAPod;
+import com.wolfram.alpha.WAQuery;
+import com.wolfram.alpha.WAQueryResult;
+import com.wolfram.alpha.WASubpod;
+
 public class Window extends JFrame implements KeyListener{
 	//Here we make a window that will contain our text area box and the input box at the bottom as well as a scroll bar the shows up when needed
 	JPanel pane= new JPanel();
@@ -49,26 +58,25 @@ public class Window extends JFrame implements KeyListener{
 	Pipeline pipeline;
 	List<Object[]> temp = CoRef("");
 
-
-
+	// Translate API Key = "AIzaSyBv5tdsys7kotjNr7SCDG271pnseL0etGY"
 
 	//This 2D array will contain the bots responses
 	String[][] Responses= {
-			//greeting
+			//greeting (r=0)
 			{"Hello there, my name is Elon, What would you like to ask me today?", "I'm very good, thank you."},
-			//Thank you
+			//Thank you (r=1)
 			{"You're welcome"},
-			//Default
+			//Default (r=2)
 			{"Sorry, I didn't understand that. I may not have enough updates to understand what you \n\twere asking.", 
-			 	"Hmm... I'm not sure what you're asking me.", 
-			 	"Sorry, could you rephrase the question?  I didn't understand that.", 
-			 	"A ridiculous question like that doesn't deserve a response.", 
-			 	"I wish I knew how to answer that.", 
-			 	"I'm afraid I don't know what to say. Can you ask me something else?", 
-			 	"Well I'm speechless. Ask me something else."},
-			//Goodbye
+				"Hmm... I'm not sure what you're asking me.", 
+				"Sorry, could you rephrase the question?  I didn't understand that.", 
+				"A ridiculous question like that doesn't deserve a response.", 
+				"I wish I knew how to answer that.", 
+				"I'm afraid I don't know what to say. Can you ask me something else?", 
+			"Well I'm speechless. Ask me something else."},
+			//Goodbye (r=3)
 			{"It was a pleasure to talk to you","Have a great day","See you later","Goodbye", "We must colonize Mars!"},
-			//Career Facts
+			//Career Facts (r=4)
 			{"My first company was Zip2, which eventually sold to Compaq for $307 million.",
 				"I am the founder of Space Exploration technologies, better known as SpaceX",
 				"In 2008 I took over as CEO of Tesla.",
@@ -77,15 +85,15 @@ public class Window extends JFrame implements KeyListener{
 				"In 2016 I founded Neuralink, a company that focuses on bran-computer interactions.",
 				"In 2006 I helped create SolarCity.",
 			"The main companies I have been involved in are: Zip2,SpaceX,Tesla,OpenAI,Neuralink and SolarCity"},
-			//general random interests
+			//general random interests (r=5)
 			{ "I'm a big fan of dogecoin, and all forms of cryptocurrency!", "Spaceships are cool I guess.",
 				"I love cars! I remember when I bought my first McLaren F1.", "I love anime!" },
-			// Interests facts
+			// Interests facts (r=6)
 			{ "Probably Parasite, it was definitely the best movie of 2019.",
 					"Black Mirror, I really like the concepts it explores.",
 					"I really enjoyed Your Name, but I'm also a fan of Studio Ghibli. Princess Mononoke is one of my\n\tfavourite films by them.",
 			"My favourite airplane is the SR-71 Blackbird. The A-XII in X AE A-XII is the predecessor to\n\tthis plane." },
-			//Life Facts
+			//Life Facts (r=7)
 			{"I was born in Pretoria, South Africa.", "June 28 1971.","Thank you for asking. I'm 49 now and will be 50 this year.", 
 				"My mother was Maye and my father was Errol. I am not very fond\n\tof my father.","I have two siblings, my sister Tosca and my brother Kimball",
 				"I started university in Pretoria, and I later moved to Canada and went to Queens university. \n\tThen after two years I transferred to the University of Pennsylvania. \n\tAfter That I started my phd at stanford where I dropped out after two days.",
@@ -98,15 +106,16 @@ public class Window extends JFrame implements KeyListener{
 				"I mainly spend my time between SpaceX and Tesla, and I'm heavily involved with the engineering decisions\n\tat those companies. I also spend a lot of my time at OpenAI too.",
 				"I own a lot of cars, but mainly drive my Model S. Though I only drive Teslas now, I've owned a \n\t1978 BMW 320i and a 1967 Jaguar (E-type).",
 			"She is from Canada originally. She was born and raised in Vancouver."},
-			//Appearances/Interviews
+			//Appearances/Interviews (r=8)
 			{ "I had a cameo in The Simpsons, The Big Bang theory, South Park, and Rick and Morty. Maybe\n\tyou've seen one of my episodes?",
 			"Yes, I was on Joe Rogan's podcast. In 2018 I think. We talked about all sorts of things, but I got\n\tin trouble for that one thing I did..." },
+			//Travelling (r=9)
 			{"I love to travel though.", "There's so many places to visit aren't there?", "Going to different places changes a man.", "War... war never changes but men do, through the places they've been"},
-			//Positive sentiment responses
+			//Positive sentiment responses (r=10)
 			{"Glad to hear that you are feeling positive.","You seem to be in a good mood!", "You're annoyingly chipper.", "Wow you're a cheerful one.", "I think this is going really well!", "I appreciate your positivity."},
-			//Negative sentiment responses
+			//Negative sentiment responses (r=11)
 			{"I am sorry it seems that you are a bit negative.","Well aren't you just a regular bowl of sunshine.","Are you having a bad day?","You seem to be upset.","Did I say something to offend you?","You're not a very pleasant person to converse with."},
-			//Bezos rivalry
+			//Bezos rivalry (r=12)
 			{"Yes we have met before. If I recall correctly, we met in 2004 to talk about space. That meeting didn't go \n\tso well",
 				"Like him? We have a bit of a rivalry going you know, so things can be a little tense\n\t between us I'd say.",
 				"To be honest, I do not like that his company Amazon has become a monopoly, and I also think he is a \n\tcopycat for his self-driving car interests.",
@@ -116,7 +125,9 @@ public class Window extends JFrame implements KeyListener{
 				"In 2004, Jeff and I had a meeting that did not go well. We disagreed about our reusable rocket ideas that \n\twe were developing for our spaceflight companies.",
 				"In 2013, we had a disagreement about my company, SpaceX, having exclusive use of a NASA launchpad that \n\tJeff thought should be open to all launch companies, including his company, Blue Origin. It was a phony \n\tblocking tactic. Blue origin had not created a reliable suborbital spacecraft that needed launching at that \n\tpoint.",
 				"In 2014, our companies got into a patent battle in 2014 over Blue Origin being granted a patent for drone \n\tships used for landing rocket boosters, which my company and I contested with the support of a judge, so \n\tBlue Origin withdrew most of their claims.",
-			"I disagree with their hiring practices, and as I have said before, their rate of progress is too slow and the \n\tamount of years Jeff Bezos has left is not enough, but I'm still glad he's doing what he's doing with \n\tBlue Origin"}
+			"I disagree with their hiring practices, and as I have said before, their rate of progress is too slow and the \n\tamount of years Jeff Bezos has left is not enough, but I'm still glad he's doing what he's doing with \n\tBlue Origin"},
+			//Wolfram Alpha (r=13)
+			{"Anything else you'd like to know?","I feel like you're interrogating me, but it's good.","Keep the questions coming!","You seem to like your facts. Me too."}
 	};
 
 	//Constructor to create the window
@@ -133,7 +144,7 @@ public class Window extends JFrame implements KeyListener{
 		//For our window we need to add our scrollbar and our input text box
 		pane.add(sideBar);
 		pane.add(input);
-    
+
 		pipeline = new Pipeline("tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,quote, sentiment", "coref.algorithm", "neural");
 
 		//Add a GIF as a jLabel based on URL.
@@ -192,10 +203,10 @@ public class Window extends JFrame implements KeyListener{
 				question = true;
 			else
 				question = false;
-			
+
 			if(msg.equals("SocketSTUFF")) {
-			this.dispose();
-			doSocketStuff(55690);
+				this.dispose();
+				doSocketStuff(55690);
 			}
 			else {
 				//call the response method sending the msg String and boolean question which is true if a question was asked
@@ -214,6 +225,10 @@ public class Window extends JFrame implements KeyListener{
 	}
 	//add text method to text area
 	public void addText(String s) {
+		// Translate translate = TranslateOptions.getDefaultInstance().getService();
+		// Translate translate = TranslateOptions.newBuilder().setApiKey("AIzaSyBv5tdsys7kotjNr7SCDG271pnseL0etGY").build().getService();
+		// Translation translation = translate.translate(s);
+		// String t = translation.getTranslatedText();
 		talkArea.setText(talkArea.getText()+s);
 	}
 
@@ -249,10 +264,10 @@ public class Window extends JFrame implements KeyListener{
 		//every sentence sent in as separate statements opposed to as one large statement. 
 		//this also allows us to properly demonstrate coreference resolution 
 		for (int i=0; i < sentences.size(); i++) {
-			//Make msg lower case so that s is intact and case doesn't matter for sent
 			String msg = sentences.get(i);
 			//A string list of all the named entities detected by corenlp
 			List<String> namedEntities = getNameEntityList(msg);
+			//Make msg lower case so that s is intact and case doesn't matter for sent
 			msg = msg.toLowerCase();
 			// Replace all punctuation so it doesn't interfere with responses
 			msg = msg.replace(',', (char)32);
@@ -262,7 +277,7 @@ public class Window extends JFrame implements KeyListener{
 			//make a list of every word in the message
 			List<String> sent = Arrays.asList(msg.split(" "));
 			addText("\n-->Elon:\t");
-			
+
 			if(Sentiment==1) {
 				addText(Responses[10][(int)(Math.random()*6)]+"\n");
 				Sentiment=0;
@@ -272,8 +287,8 @@ public class Window extends JFrame implements KeyListener{
 				Sentiment=0;
 				addText("\n-->Elon:\t");
 			}
-			
-			
+
+
 			//if it is hello print a greeting
 			if(sent.contains("hello")||sent.contains("hi")||sent.contains("hey")) {
 				r=0;
@@ -502,7 +517,7 @@ public class Window extends JFrame implements KeyListener{
 				r = 12;
 				c = 8;
 			}
-			
+
 			//9   What do you think of Blue Origin
 			else if(sent.contains("think")&&sent.contains("blue")&&sent.contains("origin")) {
 				r = 12;
@@ -529,8 +544,6 @@ public class Window extends JFrame implements KeyListener{
 
 				r = 9;
 				c=(int)Math.round(Math.random()*2);
-
-
 			}
 			//----------------------------------------Easter Egg--------------------------------------------------------//
 			else if(s.toLowerCase().equals("the earth king has invited you to lake laogai.")) {
@@ -540,140 +553,145 @@ public class Window extends JFrame implements KeyListener{
 				c=  0;
 
 			}
-
 			//------------------------------------------------------Random-----------------------------------------------//
 			else if(sent.contains("thanks")||(sent.contains("thank")&&sent.contains("you"))) {
 				r = 1;
 				c = 0;
 			}
-//----------------------------------------Easter Egg--------------------------------------------------------//
-		else if(s.toLowerCase().equals("the earth king has invited you to lake laogai.")) {
-			addText("I am honored to accept his invitation.\n");
-			addText("\n-->Elon:\t");
-			r = 2;
-			c=  0;
-			
-		}
-//------------------------------------------------------Random-----------------------------------------------//
-		else if(sent.contains("thanks")||(sent.contains("thank")&&sent.contains("you"))) {
-			r = 1;
-			c = 0;
-		}
-		//if its q end the chat and disable the input field
-		else if(sent.contains("q")) {
-			r=3;
-			c=(int)Math.round(Math.random()*4);
-			input.disable();
-		}
-		//default case
-		else {
-			r=2;
-			c=(int)(Math.random()*7);
-		}
-		
-	    // If the msg received was a question and the response is not default. There is a 1/5 chance bot responds this.
-		if(question&&r!=2&&((int)Math.round(Math.random()*4))==4) {
-			addText("That's a great question!\n");
-			addText("\n-->Elon:\t");
-		}
-		
-		//again checking if it was q and making a visible message saying the chat has ended across window
-		if(sent.contains("q"))
-			addText("--------------------------------------------Chat Has Ended--------------------------------------------");
-		
-		
-		response = Responses[r][c];
-		//add the response to the text Area
-		addText(response + "\n");
-		
-		
-	}
-		
-	return response;
-	
-}
-		
-
-		
-		 
-	    
-	    public int analyse(String txt) {
-	    	//document for corenlp
-	    	CoreDocument core= new CoreDocument(txt);
-	    	//annotate the document
-	    	pipeline.getPipe().annotate(core);
-	    	//Make a variable which will store the sentiment value
-	    	int temp=0;
-	    	//get the sentences from the input msg
-	    	List<CoreSentence> sentences= core.sentences();
-	    	//go through each sentence and get the sentiment
-	    	for(CoreSentence sentence: sentences) {
-	    		String sentiment = sentence.sentiment();
-	    		if(sentiment.equalsIgnoreCase("Positive")||sentiment.equalsIgnoreCase("Very Positive")) {
-	    			temp=1;
-	    		}
-	    		else if(sentiment.equalsIgnoreCase("Negative")||sentiment.equalsIgnoreCase("Very Negative")) {
-	    			temp=-1;
-	    		}
-	    		else
-	    			temp=0;
-	    		System.out.println(sentiment+","+temp+ "\t"+ txt);
-
-	    	}
-	    	
-	    	return temp;
-	    }
-
-	    
-	    public void doSocketStuff(int port) {
-	    	System.out.println("Ready to receive....");
-	    	try 
-	    	(ServerSocket serversocket = new ServerSocket(port);
-	    	Socket sock = serversocket.accept();//establishes connection 
-	    	DataInputStream dis = new DataInputStream(sock.getInputStream()); 
-	    	DataOutputStream dos = new DataOutputStream(sock.getOutputStream()))
-	    	{
-	    	String inmsg = "";
-	    	String outmsg = "";
-			while(inmsg!="q") {
-		    inmsg = (String)dis.readUTF();  
-			//outmsg = response(inmsg, inmsg.indexOf('?') != -1);
-			System.out.println(inmsg);
-			System.out.println(outmsg);
-			dos.writeUTF(outmsg);
+			//---------------- WOLFRAM ALPHA API ----------------
+			else if((sent.contains("wolfram")&&sent.contains("alpha"))||sent.contains("wolframalpha")||sent.contains("wolfram|alpha")) {
+				addText(getWolframAlpha(sent)+"\n");
+				addText("\n-->Elon:\t");
+				r = 13;
+				c = (int)(Math.random()*4);
 			}
-			
-	    	}
-	    	catch(Exception e) {
-	    		
-	    	}
-	    
-			
-	    }
-	    
-		
+			//if its q end the chat and disable the input field
+			else if(sent.contains("q")) {
+				r=3;
+				c=(int)Math.round(Math.random()*4);
+				input.disable();
+			}
+			//default case
+			else {
+				addText("Let's see if Wolfram|Alpha has the answer to that...\n");
+				addText("\n-->Elon:\t");
+				//try wolfram alpha
+				if(getWolframAlpha(sent).equals("Sorry, Wolfram|Alpha can't answer that.")) {
+					//resort to default response set
+					r=2;
+					c=(int)(Math.random()*7);
+				}else {
+					//give Wolfram alpha answer
+					addText(getWolframAlpha(sent)+"\n");
+					addText("\n-->Elon:\t");
+					r = 13;
+					c = (int)(Math.random()*4);
+				}
+			}
+
+			// If the msg received was a question and the response is not default. There is a 1/5 chance bot responds this.
+			if(question&&r!=2&&((int)Math.round(Math.random()*4))==4) {
+				addText("That's a great question!\n");
+				addText("\n-->Elon:\t");
+			}
+
+			//again checking if it was q and making a visible message saying the chat has ended across window
+			if(sent.contains("q"))
+				addText("--------------------------------------------Chat Has Ended--------------------------------------------");
+
+
+			response = Responses[r][c];
+			//add the response to the text Area
+			addText(response + "\n");
+
+
+		}
+
+		return response;
+
+	}
+
+
+
+
+
+	public int analyse(String txt) {
+		//document for corenlp
+		CoreDocument core= new CoreDocument(txt);
+		//annotate the document
+		pipeline.getPipe().annotate(core);
+		//Make a variable which will store the sentiment value
+		int temp=0;
+		//get the sentences from the input msg
+		List<CoreSentence> sentences= core.sentences();
+		//go through each sentence and get the sentiment
+		for(CoreSentence sentence: sentences) {
+			String sentiment = sentence.sentiment();
+			if(sentiment.equalsIgnoreCase("Positive")||sentiment.equalsIgnoreCase("Very Positive")) {
+				temp=1;
+			}
+			else if(sentiment.equalsIgnoreCase("Negative")||sentiment.equalsIgnoreCase("Very Negative")) {
+				temp=-1;
+			}
+			else
+				temp=0;
+			System.out.println(sentiment+","+temp+ "\t"+ txt);
+
+		}
+
+		return temp;
+	}
+
+
+	public void doSocketStuff(int port) {
+		System.out.println("Ready to receive....");
+		try 
+		(ServerSocket serversocket = new ServerSocket(port);
+				Socket sock = serversocket.accept();//establishes connection 
+				DataInputStream dis = new DataInputStream(sock.getInputStream()); 
+				DataOutputStream dos = new DataOutputStream(sock.getOutputStream()))
+		{
+			String inmsg = "";
+			String outmsg = "";
+			while(inmsg!="q") {
+				inmsg = (String)dis.readUTF();  
+				//outmsg = response(inmsg, inmsg.indexOf('?') != -1);
+				System.out.println(inmsg);
+				System.out.println(outmsg);
+				dos.writeUTF(outmsg);
+			}
+
+		}
+		catch(Exception e) {
+
+		}
+
+
+	}
+
+
 
 
 	//Get a list of namedEntitys from the string and then convert those named entities to strings in a new list
 	public List<String> getNameEntityList(String s){
 
 		List<String> list = new ArrayList();
-		
-	    if(s!="") {
-		//document for corenlp
-		CoreDocument document = new CoreDocument(s);
-		// annnotate the document
-		pipeline.getPipe().annotate(document);
-		// get entities from the document
-		List<CoreEntityMention> entityMentions = document.entityMentions();
-		//print entities
-		System.out.println(entityMentions.toString());
-		//Convert entities to their string representations and add to the list
-		for(int i = 0; i<entityMentions.size();i++) {
-			list.add(entityMentions.get(i).toString().toLowerCase());
-		}
 
-	    }
+		if(s!="") {
+			//document for corenlp
+			CoreDocument document = new CoreDocument(s);
+			// annnotate the document
+			pipeline.getPipe().annotate(document);
+			// get entities from the document
+			List<CoreEntityMention> entityMentions = document.entityMentions();
+			//print entities
+			System.out.println(entityMentions.toString());
+			//Convert entities to their string representations and add to the list
+			for(int i = 0; i<entityMentions.size();i++) {
+				list.add(entityMentions.get(i).toString().toLowerCase());
+			}
+
+		}
 		return list;
 
 	}
@@ -700,7 +718,7 @@ public class Window extends JFrame implements KeyListener{
 		p.getPipe().annotate(document);
 		for (CorefChain cc : document.get(CorefCoreAnnotations.CorefChainAnnotation.class).values() ) {
 			list.add(extract(cc.getMentionMap().values().toArray()));
- 
+
 		}
 		return list;
 	}
@@ -709,7 +727,7 @@ public class Window extends JFrame implements KeyListener{
 		for (int i = 0;i < A.length;i++) {
 			A[i]=(A[i].toString().substring(( A[i]).toString().indexOf("\"")+1,( A[i]).toString().lastIndexOf("\"")));
 		}
-			return A;
+		return A;
 	}
 
 	/****************
@@ -727,8 +745,76 @@ public class Window extends JFrame implements KeyListener{
 			if(s.contains(replace[i].toString()))
 				s=s.replace(replace[i].toString(), replacer);
 		}
-		
+
 		return s;
 	}
+	
+	public String getWolframAlpha(List<String> sent) {
+		String input = "";
+		for(String word : sent) {
+			if(word.equals("you")||word.equals("your")||word.equals("elon")||word.equals("musk"))
+				continue;
+			input += word + " ";
+		}
+		String textToReturn = "";
+		
+		WAEngine engine = new WAEngine();
+		engine.setAppID("Q7L8AV-2RRALYVGYG");
+        engine.addFormat("plaintext");
+        
+        WAQuery query = engine.createQuery();
+        query.setInput("Elon Musk "+input);
+        
+        try {
+            // For educational purposes, print out the URL we are about to send:
+            System.out.println("Query URL:");
+            System.out.println(engine.toURL(query));
+            System.out.println("");
+            
+            // This sends the URL to the Wolfram|Alpha server, gets the XML result
+            // and parses it into an object hierarchy held by the WAQueryResult object.
+            WAQueryResult queryResult = engine.performQuery(query);
+            
+            if (queryResult.isError()) {
+                System.out.println("Query error");
+                System.out.println("  error code: " + queryResult.getErrorCode());
+                System.out.println("  error message: " + queryResult.getErrorMessage());
+                textToReturn = "Sorry, Wolfram|Alpha can't answer that.";
+            } else if (!queryResult.isSuccess()) {
+                System.out.println("Query was not understood; no results available.");
+                textToReturn = "Sorry, Wolfram|Alpha can't answer that.";
+            } else {
+                // Got a result.
+                System.out.println("Successful query. Pods follow:\n");
+                for (WAPod pod : queryResult.getPods()) {
+                    if (!pod.isError()) {
+                        //System.out.println(pod.getTitle());
+                        //System.out.println("------------");
+                        for (WASubpod subpod : pod.getSubpods()) {
+                            for (Object element : subpod.getContents()) {
+                                if (element instanceof WAPlainText) {
+                                	if(pod.getTitle().equals("Result")) {
+                                		System.out.println("FOUND RESULT POD");
+                                		textToReturn = ((WAPlainText) element).getText();
+                                	}
+                                    //System.out.println(((WAPlainText) element).getText());
+                                    //System.out.println("");
+                                }
+                            }
+                        }
+                        System.out.println("");
+                    }
+                }
+                // We ignored many other types of Wolfram|Alpha output, such as warnings, assumptions, etc.
+                // These can be obtained by methods of WAQueryResult or objects deeper in the hierarchy.
+            }
+        } catch (WAException e) {
+        	textToReturn = "Sorry, Wolfram|Alpha can't answer that.";
+            e.printStackTrace();
+        }
+        System.out.println("******** textToReturn: "+textToReturn+" *********\n");
+		return textToReturn;
+	}
+	
 }
 
