@@ -1,4 +1,11 @@
 # Elon Musk Chat Bot
+## Updates for Individual Project
+Since Assignment 3 a single modification has been made to this project: the implementation of an API which interfaces with Wolfram|Alpha to gather information about Elon Musk.  This additional feature was implemented in two ways.
+- If the user inputs "wolfram alpha" or a variation of this phrase in conjunction with a question about Elon Musk, the bot will attempt to find the answer in Wolfram|Alpha's database.  
+- If the bot cannot find an answer to a question in its own database, before resorting to a default response, it will search Wolfram|Alpha's database for the answer and if possible, return it instead.
+
+---------------------------------------
+
 ## Updates for Assignment 3
 Since Assignment 2 we have added new features and also enhanced some quality of life features to our chatbot. 
 Additions include:
